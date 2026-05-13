@@ -1,0 +1,1581 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Viron · Propuesta · Copy Estratega</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  /* ─── Deck-level overrides ─────────────────────────── */
+  html, body { background: #000; margin: 0; }
+  deck-stage { background: #000; }
+
+  :root {
+    --slide-pad-x: 140px;
+    --slide-pad-y: 100px;
+    --gold: #C9A052;
+    --gold-light: #E4C87A;
+    --gold-dark: #9A7838;
+    --red: #C95252;
+    --red-soft: #8a3a3a;
+    --bg: #0D0D0D;
+    --surface: #161616;
+    --surface-2: #1F1F1F;
+    --line: #2A2A2A;
+    --line-strong: #3A3A3A;
+    --fg-1: #FFFFFF;
+    --fg-2: #B5B5B5;
+    --fg-3: #777777;
+    --fg-4: #4A4A4A;
+  }
+
+  section.slide {
+    position: relative;
+    width: 1920px;
+    height: 1080px;
+    background: var(--bg);
+    color: var(--fg-1);
+    font-family: var(--font-body);
+    overflow: hidden;
+    padding: var(--slide-pad-y) var(--slide-pad-x);
+    display: flex;
+    flex-direction: column;
+  }
+
+  section.slide::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size: 3px 3px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Waves motif */
+  .waves {
+    position: absolute;
+    right: 0; bottom: 0;
+    width: 520px; height: 360px;
+    pointer-events: none;
+    opacity: 0.55;
+    z-index: 1;
+  }
+  .waves svg { width: 100%; height: 100%; display: block; }
+  .waves path { fill: none; stroke: var(--gold); stroke-width: 1.2; opacity: 0.35; }
+  .waves path:nth-child(1) { opacity: 0.12; }
+  .waves path:nth-child(2) { opacity: 0.18; }
+  .waves path:nth-child(3) { opacity: 0.26; }
+  .waves path:nth-child(4) { opacity: 0.34; }
+  .waves path:nth-child(5) { opacity: 0.45; }
+  .waves path:nth-child(6) { opacity: 0.6; stroke: var(--gold-light); }
+
+  /* Brand mark */
+  .brandmark { display: inline-flex; align-items: center; gap: 14px; z-index: 2; }
+  .brandmark img { width: 44px; height: 44px; filter: invert(1); opacity: 0.92; }
+  .brandmark .wordmark {
+    font-family: var(--font-display);
+    font-size: 22px; font-weight: 500;
+    letter-spacing: 0.02em; color: var(--fg-1);
+  }
+  .brandmark .wordmark em { font-style: italic; color: var(--gold); font-weight: 400; }
+
+  /* Slide chrome */
+  .slide-num {
+    position: absolute;
+    bottom: 56px;
+    left: var(--slide-pad-x);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--fg-4);
+    z-index: 3;
+  }
+  .slide-num strong { color: var(--gold); font-weight: 500; }
+
+  .slide > * { position: relative; z-index: 2; }
+
+  /* Typography helpers */
+  .display { font-family: var(--font-display); font-weight: 600; line-height: 1.04; letter-spacing: -0.025em; color: var(--fg-1); margin: 0; }
+  .eyebrow { font-family: var(--font-body); font-size: 14px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+  .meta { font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.16em; color: var(--fg-3); text-transform: uppercase; }
+  .gold { color: var(--gold); }
+  .gold-light { color: var(--gold-light); }
+  .red { color: var(--red); }
+  .muted { color: var(--fg-2); }
+  .subtle { color: var(--fg-3); }
+  .ital { font-style: italic; }
+
+  /* ─── VIRON LOGO BADGE (replaces image on cover) ──── */
+  .viron-logo-circle {
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: #F5F4F0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  .viron-logo-circle::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.6), transparent 60%);
+    pointer-events: none;
+  }
+  .viron-logo-circle .vmark {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 56px;
+    letter-spacing: -0.03em;
+    color: #0A0A0A;
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+  }
+  .viron-logo-circle .vsub {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    color: #0A0A0A;
+    margin-top: 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── Slide 1 ─────────────────────────────────── */
+  .s1-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .s1-stack { margin-top: auto; margin-bottom: auto; max-width: 1500px; }
+  .s1-headline {
+    font-family: var(--font-display);
+    font-size: 96px; font-weight: 600;
+    line-height: 1.04; letter-spacing: -0.028em;
+    margin: 0; color: var(--fg-1);
+  }
+  .s1-headline .accent { color: var(--gold); font-style: italic; font-weight: 500; }
+  .s1-headline .dim { display: block; font-weight: 300; color: #A8A8A8; font-style: italic; }
+  .s1-sub {
+    margin-top: 56px;
+    font-family: var(--font-body);
+    font-size: 26px; font-weight: 300;
+    line-height: 1.5; color: var(--fg-2);
+    max-width: 1100px;
+  }
+  .s1-sub strong { color: var(--gold-light); font-weight: 500; }
+  .s1-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+
+  /* ─── Slide 2 ─────────────────────────────────── */
+  section.slide.s2 {
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    padding-top: 160px; padding-bottom: 160px;
+  }
+  .s2 .intro { font-family: var(--font-body); font-size: 22px; font-weight: 300; color: var(--fg-3); margin: 0 0 24px; letter-spacing: 0.02em; }
+  .s2 .pre   { font-family: var(--font-body); font-size: 30px; font-weight: 300; color: var(--fg-1); margin: 0; letter-spacing: -0.005em; }
+  .s2 .price {
+    font-family: var(--font-display); font-size: 220px; font-weight: 700;
+    color: var(--fg-1); line-height: 1; letter-spacing: -0.04em; margin: 0;
+  }
+  .s2 .price .currency { font-size: 110px; vertical-align: top; margin-right: 8px; color: var(--gold); font-weight: 500; }
+  .s2 .price .plus     { font-family: var(--font-body); font-weight: 200; color: var(--fg-3); font-size: 70px; margin: 0 28px; vertical-align: middle; }
+  .s2 .price .monthly  { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 110px; color: var(--gold); }
+  .s2 .price .monthly small { font-family: var(--font-body); font-style: normal; font-size: 36px; color: var(--fg-3); font-weight: 300; letter-spacing: 0.02em; margin-left: 6px; }
+  .s2 .terms  { font-family: var(--font-mono); font-size: 16px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--fg-3); margin: 0; }
+  .s2 .terms span { margin: 0 14px; color: var(--gold); }
+  .s2 .closer { font-family: var(--font-body); font-size: 26px; font-weight: 300; color: var(--fg-1); margin: 0; letter-spacing: -0.005em; }
+  .s2 .closer em { font-style: italic; color: var(--gold-light); }
+
+  /* ─── Slide 3 — Espejo (2-column) ──────────────── */
+  .s3-title { font-family: var(--font-display); font-size: 64px; font-weight: 600; line-height: 1.06; letter-spacing: -0.025em; margin: 0 0 70px; max-width: 1500px; }
+  .s3-title .par { display: block; font-family: var(--font-display); font-size: 26px; font-style: italic; font-weight: 400; color: var(--fg-3); margin-top: 18px; letter-spacing: 0; }
+  .s3-cols {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    gap: 80px;
+    align-items: stretch;
+  }
+  .s3-col { display: flex; flex-direction: column; gap: 30px; padding-top: 8px; }
+  .s3-col-head {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .s3-col.pos .s3-col-head { color: var(--gold); }
+  .s3-col.neg .s3-col-head { color: var(--red); }
+  .s3-vdivider { background: linear-gradient(180deg, transparent, var(--line) 20%, var(--line) 80%, transparent); width: 1px; }
+  .s3-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 22px;
+    padding: 12px 0;
+  }
+  .s3-item .marker {
+    flex-shrink: 0;
+    margin-top: 12px;
+  }
+  .s3-col.pos .s3-item .marker {
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+  .s3-col.neg .s3-item .num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 64px;
+    color: var(--red);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    width: 64px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .s3-col.pos .s3-item .num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 44px;
+    color: var(--gold);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    flex-shrink: 0;
+    margin-right: 4px;
+  }
+  .s3-item .text {
+    font-family: var(--font-body);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.35;
+    color: var(--fg-1);
+    flex: 1;
+  }
+  .s3-col.neg .s3-item .text { color: var(--fg-2); }
+
+  /* ─── Slide 4 — Problema (cita + flow 4 pasos) ───── */
+  .s4-quote {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 78px;
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+    color: var(--fg-1);
+    margin: 0;
+    max-width: 1600px;
+    text-wrap: balance;
+  }
+  .s4-quote .punct { color: var(--gold); font-style: normal; font-weight: 600; }
+  .s4-quote .loss { color: var(--red); font-weight: 600; }
+  .s4-quote-mark {
+    font-family: var(--font-display);
+    font-size: 180px;
+    color: var(--gold);
+    line-height: 0.8;
+    font-weight: 700;
+    margin-bottom: -30px;
+    opacity: 0.7;
+  }
+  .s4-flow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 90px;
+    align-items: stretch;
+  }
+  .s4-node {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 28px 30px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    min-height: 160px;
+  }
+  .s4-node.dead {
+    border-color: var(--red-soft);
+    background: linear-gradient(140deg, rgba(201,82,82,0.07), rgba(201,82,82,0.01));
+  }
+  .s4-node .step {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+  }
+  .s4-node.dead .step { color: var(--red); }
+  .s4-node .label {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--fg-1);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .s4-node.dead .label { color: var(--red); font-style: italic; }
+  .s4-node::after {
+    content: "→";
+    position: absolute;
+    right: -22px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-body);
+    font-size: 28px;
+    color: var(--fg-4);
+    z-index: 2;
+  }
+  .s4-node:last-child::after { display: none; }
+
+  /* ─── Slide 5 — Antes / Después (tabla) ────────── */
+  .s5-eyebrow-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 1fr;
+    gap: 40px;
+    padding: 0 12px 28px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 0;
+  }
+  .s5-eyebrow-row .left  { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.32em; color: var(--fg-4); text-transform: uppercase; }
+  .s5-eyebrow-row .mid   { font-family: var(--font-mono); font-size: 18px; letter-spacing: 0.32em; color: var(--red); text-transform: uppercase; font-weight: 500; }
+  .s5-eyebrow-row .right { font-family: var(--font-mono); font-size: 18px; letter-spacing: 0.32em; color: var(--gold); text-transform: uppercase; font-weight: 500; }
+  .s5-table {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .s5-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 1fr;
+    gap: 40px;
+    padding: 30px 12px;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .s5-row:last-child { border-bottom: none; }
+  .s5-row .label {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--gold);
+    letter-spacing: -0.015em;
+  }
+  .s5-row .bad,
+  .s5-row .good {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-family: var(--font-body);
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.35;
+  }
+  .s5-row .bad { color: var(--fg-2); }
+  .s5-row .good { color: var(--fg-1); }
+  .s5-row .bad .dot,
+  .s5-row .good .dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .s5-row .bad .dot { background: var(--red); }
+  .s5-row .good .dot { background: var(--gold); }
+
+  /* ─── Slide 6 — Los Números (3 cifras) ──────────── */
+  .s6v-title {
+    font-family: var(--font-display);
+    font-size: 64px;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0 0 30px;
+    max-width: 1400px;
+  }
+  .s6v-title .em { color: var(--gold); font-style: italic; font-weight: 500; }
+  .s6v-sub {
+    font-family: var(--font-body);
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--fg-3);
+    margin: 0 0 80px;
+    max-width: 1200px;
+  }
+  .s6v-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+    align-items: stretch;
+  }
+  .s6v-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 40px 40px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+  }
+  .s6v-cell.hero {
+    background: linear-gradient(140deg, rgba(201,160,82,0.10), rgba(201,160,82,0.02));
+    border-color: var(--gold);
+    box-shadow: 0 0 60px rgba(201,160,82,0.12);
+  }
+  .s6v-cell .v-num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 180px;
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+    color: var(--fg-1);
+  }
+  .s6v-cell.hero .v-num { color: var(--gold); font-style: italic; }
+  .s6v-cell .v-num small {
+    font-family: var(--font-body);
+    font-style: normal;
+    font-size: 36px;
+    color: var(--fg-3);
+    font-weight: 400;
+    margin-left: 6px;
+  }
+  .s6v-cell .v-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+  }
+  .s6v-cell.hero .v-eyebrow { color: var(--gold); }
+  .s6v-cell .v-desc {
+    font-family: var(--font-body);
+    font-size: 19px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--fg-2);
+    margin-top: auto;
+  }
+  .s6v-cell.hero .v-desc { color: var(--fg-1); font-weight: 400; }
+  .s6v-cell.hero .v-desc strong { color: var(--gold-light); font-weight: 500; }
+
+  /* ─── Slide 7 — El Sistema (3 cards) ──────────── */
+  .s7v-title-block { margin-bottom: 70px; max-width: 1400px; }
+  .s7v-title {
+    font-family: var(--font-display);
+    font-size: 84px;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0 0 18px;
+  }
+  .s7v-title .em { color: var(--gold); font-style: italic; font-weight: 500; }
+  .s7v-sub {
+    font-family: var(--font-body);
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--fg-2);
+    line-height: 1.5;
+  }
+  .s7v-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-bottom: 30px;
+  }
+  .s7v-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 44px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .s7v-card .v-num {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.28em;
+    color: var(--gold);
+  }
+  .s7v-card .v-icon {
+    color: var(--gold);
+    width: 56px; height: 56px;
+    border: 1px solid var(--line-strong);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .s7v-card .v-icon svg {
+    width: 28px; height: 28px;
+    fill: none; stroke: currentColor;
+    stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .s7v-card .v-name {
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 600;
+    color: var(--fg-1);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-top: auto;
+  }
+  .s7v-card .v-name .em { color: var(--gold); font-style: italic; font-weight: 500; }
+  .s7v-foot {
+    text-align: center;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 28px;
+    color: var(--fg-3);
+    letter-spacing: -0.01em;
+    margin-top: 12px;
+  }
+  .s7v-foot .em { color: var(--gold); }
+
+  /* ─── Slide 8 — Bonus (2 items) ──────────────── */
+  .s8v-title {
+    font-family: var(--font-display);
+    font-size: 72px;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 18px 0 0;
+  }
+  .s8v-title .em { color: var(--gold); font-style: italic; font-weight: 500; }
+  .s8v-sub {
+    font-family: var(--font-body);
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--fg-2);
+    line-height: 1.5;
+    margin: 22px 0 70px;
+    max-width: 1200px;
+  }
+  .s8v-list { display: flex; flex-direction: column; gap: 26px; }
+  .s8v-row {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--gold);
+    border-radius: 6px;
+    padding: 36px 44px;
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    align-items: center;
+    gap: 38px;
+  }
+  .s8v-row .check {
+    width: 48px; height: 48px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .s8v-row .check svg {
+    width: 24px; height: 24px;
+    fill: none; stroke: currentColor;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .s8v-row .text { display: flex; flex-direction: column; gap: 8px; }
+  .s8v-row .name {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--fg-1);
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+  }
+  .s8v-row .desc {
+    font-family: var(--font-body);
+    font-size: 19px;
+    font-weight: 300;
+    color: var(--fg-3);
+    line-height: 1.4;
+  }
+
+  /* ─── Slide 9 — Tu parte (3 numbered) ────────── */
+  .s9v-title {
+    font-family: var(--font-display);
+    font-size: 76px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 0 0 80px;
+    max-width: 1500px;
+  }
+  .s9v-title .em { color: var(--gold); font-style: italic; font-weight: 500; }
+  .s9v-list { display: flex; flex-direction: column; gap: 0; flex: 1; }
+  .s9v-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 480px;
+    gap: 50px;
+    padding: 50px 12px;
+    border-top: 1px solid var(--line);
+    align-items: center;
+  }
+  .s9v-row:last-child { border-bottom: 1px solid var(--line); }
+  .s9v-row .v-num {
+    font-family: var(--font-display);
+    font-size: 88px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-style: italic;
+  }
+  .s9v-row .v-name {
+    font-family: var(--font-display);
+    font-size: 44px;
+    font-weight: 600;
+    color: var(--fg-1);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .s9v-row .v-meta {
+    font-family: var(--font-body);
+    font-size: 19px;
+    font-weight: 400;
+    color: var(--fg-3);
+    line-height: 1.45;
+  }
+  .s9v-foot {
+    margin-top: 50px;
+    text-align: center;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 28px;
+    color: var(--fg-2);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+  .s9v-foot .em { color: var(--gold); font-weight: 500; }
+
+  /* ─── Slide 10 — Proceso (timeline) ────────── */
+  .s10v-title {
+    font-family: var(--font-display);
+    font-size: 64px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 0 0 30px;
+    max-width: 1500px;
+  }
+  .s10v-title .em { color: var(--gold); font-style: italic; font-weight: 500; }
+  .s10v-timeline { margin: 80px 0 60px; position: relative; }
+  .s10v-line {
+    position: absolute;
+    top: 56px;
+    left: 8%;
+    right: 8%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--line) 0%, var(--gold) 100%);
+  }
+  .s10v-nodes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    position: relative;
+    z-index: 2;
+  }
+  .s10v-node { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px; }
+  .s10v-node .day {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+    height: 24px;
+  }
+  .s10v-node .dot {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1.5px solid var(--line-strong);
+  }
+  .s10v-node.now .dot {
+    background: var(--gold);
+    border-color: var(--gold);
+    box-shadow: 0 0 24px rgba(201,160,82,0.5);
+    width: 26px; height: 26px;
+  }
+  .s10v-node .label {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--fg-1);
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+  }
+  .s10v-node.now .label { color: var(--gold); font-style: italic; }
+
+  .s10v-guarantee {
+    margin: 60px auto 0;
+    max-width: 1100px;
+    background: rgba(201,160,82,0.06);
+    border: 1.5px solid var(--gold);
+    border-radius: 8px;
+    padding: 32px 48px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    box-shadow: 0 0 50px rgba(201,160,82,0.10);
+  }
+  .s10v-guarantee .shield {
+    width: 56px; height: 56px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+  .s10v-guarantee .shield svg {
+    width: 100%; height: 100%;
+    fill: none; stroke: currentColor;
+    stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .s10v-guarantee .text {
+    font-family: var(--font-body);
+    font-size: 22px;
+    color: var(--fg-1);
+    font-weight: 300;
+    line-height: 1.45;
+  }
+  .s10v-guarantee .text strong {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--gold);
+    margin-right: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  /* ─── Slide 11 — Daniel ─────────────────────── */
+  section.slide.s11 {
+    display: grid !important;
+    grid-template-columns: 1fr 600px;
+    gap: 80px;
+    align-items: center;
+    padding: 80px 100px 80px 200px;
+  }
+  .s11-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+  }
+  .s11-title {
+    font-family: var(--font-display);
+    font-size: 60px;
+    font-weight: 600;
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    margin: 0 0 50px;
+  }
+  .s11-title .em { color: var(--gold); font-style: italic; font-weight: 500; }
+  .s11-points { display: flex; flex-direction: column; gap: 32px; }
+  .s11-point { display: flex; flex-direction: column; gap: 10px; max-width: none; }
+  .s11-point .head { font-family: var(--font-display); font-size: 26px; font-weight: 600; color: var(--fg-1); letter-spacing: -0.015em; line-height: 1.25; }
+  .s11-point .body { font-family: var(--font-body); font-size: 18px; font-weight: 300; color: var(--fg-3); line-height: 1.55; }
+  .s11-right {
+    width: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .s11-photo-frame {
+    width: 600px; height: 820px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #0A0A0A;
+    border: 1px solid var(--line);
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 60px rgba(201,160,82,0.08);
+  }
+  .s11-photo-frame img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+  }
+  .s11-photo-frame::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(13,13,13,0.55) 100%);
+  }
+  .s11-photo-tag {
+    position: absolute;
+    bottom: 36px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* ─── Slide 12 — Inversión ─────────────────────── */
+  .s12v-title {
+    font-family: var(--font-display);
+    font-size: 60px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 0 0 40px;
+    text-align: center;
+  }
+  .s12v-title .em { color: var(--gold); font-style: italic; font-weight: 500; }
+  .s12v-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    flex: 1;
+  }
+  .s12v-card {
+    background: rgba(201,160,82,0.04);
+    border: 1.5px solid var(--gold);
+    border-radius: 8px;
+    padding: 40px 44px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    box-shadow: 0 0 50px rgba(201,160,82,0.08);
+  }
+  .s12v-card .label {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .s12v-card .price {
+    font-family: var(--font-display);
+    font-size: 96px;
+    font-weight: 700;
+    color: var(--fg-1);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .s12v-card .price small {
+    font-family: var(--font-body);
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--fg-3);
+    margin-left: 8px;
+  }
+  .s12v-card .price-tag {
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--fg-3);
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+  .s12v-card ul { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-direction: column; gap: 12px; }
+  .s12v-card ul li {
+    font-family: var(--font-body);
+    font-size: 19px;
+    font-weight: 400;
+    color: var(--fg-1);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    line-height: 1.35;
+  }
+  .s12v-card ul li::before {
+    content: "✓";
+    color: var(--gold);
+    flex-shrink: 0;
+    font-size: 18px;
+    line-height: 1.35;
+  }
+  .s12v-no {
+    margin-top: 32px;
+    padding: 22px 36px;
+    border: 1px dashed var(--line-strong);
+    border-radius: 8px;
+    background: rgba(20,20,20,0.4);
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .s12v-no .nlabel {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+    flex-shrink: 0;
+  }
+  .s12v-no .items {
+    font-family: var(--font-body);
+    font-size: 18px;
+    color: var(--fg-3);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+  .s12v-no .items span { color: var(--fg-4); margin: 0 12px; }
+
+  /* ─── Slide 13 — Cierre ─────────────────────── */
+  .s13 { align-items: center; text-align: center; justify-content: center; }
+  .s13-eyebrow {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 32px;
+    color: var(--gold);
+    margin-bottom: 28px;
+  }
+  .s13-headline {
+    font-family: var(--font-display);
+    font-size: 120px;
+    font-weight: 700;
+    color: var(--fg-1);
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    margin: 0 0 70px;
+    white-space: nowrap;
+  }
+  .s13-headline .em { color: var(--gold); font-style: italic; font-weight: 600; }
+  .s13-sub {
+    font-family: var(--font-body);
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--fg-2);
+    margin: 0 0 70px;
+    max-width: 1100px;
+    line-height: 1.5;
+  }
+  .s13-contact {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    padding: 28px 60px;
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    background: rgba(201,160,82,0.06);
+  }
+  .s13-contact .who {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .s13-contact .what {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--fg-1);
+    letter-spacing: -0.01em;
+  }
+  .s13-bottom-brand {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+  }
+</style>
+
+<script type="application/json" id="speaker-notes">[]</script>
+</head>
+<body>
+
+<deck-stage>
+
+<!-- ════════════════════ SLIDE 1 — PORTADA ════════════════════ -->
+<section class="slide" data-screen-label="01 Portada">
+  <div class="s1-top">
+    <div class="brandmark">
+      <img src="logo-circle.png" alt="">
+      <span class="wordmark">Copy <em>Estratega</em></span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:14px;">
+      <span style="font-family:var(--font-mono);font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:var(--fg-3);font-weight:400;">Propuesta para</span>
+      <div class="viron-logo-circle">
+        <div class="vmark">VIRON</div>
+        <div class="vsub">GLOBAL SOLUTIONS</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s1-stack">
+    <h1 class="s1-headline">
+      Tienes el <span class="accent">sistema técnico.</span><br>
+      Todavía no tienes el que<br>
+      <span class="dim">convierte eso en clientes.</span>
+    </h1>
+    <p class="s1-sub">
+      <strong>El 60–90% de tus prospectos</strong> no está listo para llamar el día que te descubre. Hoy diseñamos qué pasa con ellos.
+    </p>
+  </div>
+
+  <div class="s1-bottom">
+    <div class="meta">Viron Global Solutions</div>
+    <div class="meta">Mayo · 2026</div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>01</strong> · 13 — Portada</div>
+</section>
+
+<!-- ════════════════════ SLIDE 2 — PRECIO PRIMERO ════════════════════ -->
+<section class="slide s2" data-screen-label="02 Precio">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+    <p class="intro">Vamos a quitarnos la parte incómoda de encima.</p>
+    <p class="pre">La inversión para poner este sistema en marcha es de…</p>
+  </div>
+
+  <div class="price">
+    <span class="currency">€</span>2.000<span class="plus">+</span><span class="monthly">€600<small>/mes</small></span>
+  </div>
+
+  <div style="display:flex;flex-direction:column;align-items:center;gap:32px;">
+    <p class="terms"><span>·</span> Setup único <span>·</span> Retainer desde el mes 2 <span>·</span> Sin sorpresas <span>·</span></p>
+    <p class="closer">Ahora te muestro <em>por qué tiene sentido.</em></p>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>02</strong> · 13 — La inversión</div>
+</section>
+
+<!-- ════════════════════ SLIDE 3 — ESPEJO ════════════════════ -->
+<section class="slide" data-screen-label="03 Espejo">
+  <h2 class="s3-title">
+    Lo que Viron <span class="ital gold">ya construyó.</span>
+    <span class="par">Y lo que <span class="red ital">todavía no</span> está en marcha.</span>
+  </h2>
+
+  <div class="s3-cols">
+    <div class="s3-col pos">
+      <div class="s3-col-head">Lo que ya tienes</div>
+      <div class="s3-item">
+        <div class="num">1.117</div>
+        <div class="text">Seguidores en LinkedIn en solo <em style="font-style:italic;color:var(--gold-light);">4 meses</em>.</div>
+      </div>
+      <div class="s3-item">
+        <div class="marker"></div>
+        <div class="text">Web con metodología <em style="font-style:italic;color:var(--gold-light);">documentada</em> de principio a fin.</div>
+      </div>
+      <div class="s3-item">
+        <div class="num">6</div>
+        <div class="text">Artículos de alta intención ya publicados.</div>
+      </div>
+      <div class="s3-item">
+        <div class="marker"></div>
+        <div class="text">Propuesta de valor <em style="font-style:italic;color:var(--gold-light);">clara y diferenciada</em>.</div>
+      </div>
+    </div>
+
+    <div class="s3-vdivider"></div>
+
+    <div class="s3-col neg">
+      <div class="s3-col-head">Lo que aún no</div>
+      <div class="s3-item">
+        <div class="num">0</div>
+        <div class="text">Formularios de captación en el sitio.</div>
+      </div>
+      <div class="s3-item">
+        <div class="num">0</div>
+        <div class="text">Plataforma de email marketing conectada.</div>
+      </div>
+      <div class="s3-item">
+        <div class="num">0</div>
+        <div class="text">LinkedIn Insight Tag para retargeting.</div>
+      </div>
+      <div class="s3-item">
+        <div class="num">0</div>
+        <div class="text">Casos de estudio publicados en la web.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>03</strong> · 13 — Espejo</div>
+</section>
+
+<!-- ════════════════════ SLIDE 4 — EL PROBLEMA ════════════════════ -->
+<section class="slide s4" style="justify-content:space-between;" data-screen-label="04 El problema">
+  <div>
+    <div class="s4-quote-mark">"</div>
+    <p class="s4-quote">
+      Llega<span class="punct">.</span> Lee<span class="punct">.</span> No está listo<span class="punct">.</span><br>
+      Cierra la pestaña<span class="punct">.</span> <span class="loss">Viron no lo recupera nunca.</span>
+    </p>
+  </div>
+
+  <div class="s4-flow">
+    <div class="s4-node">
+      <div class="step">01</div>
+      <div class="label">Descubrimiento</div>
+    </div>
+    <div class="s4-node">
+      <div class="step">02</div>
+      <div class="label">Interés real</div>
+    </div>
+    <div class="s4-node">
+      <div class="step">03</div>
+      <div class="label">El momento crítico</div>
+    </div>
+    <div class="s4-node dead">
+      <div class="step">04</div>
+      <div class="label">Desaparece</div>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>04</strong> · 13 — El problema</div>
+</section>
+
+<!-- ════════════════════ SLIDE 5 — ANTES / DESPUÉS ════════════════════ -->
+<section class="slide" style="padding:90px 100px 110px;" data-screen-label="05 Antes y despues">
+  <div class="s5-eyebrow-row">
+    <div class="left">Pieza</div>
+    <div class="mid">Sin el sistema</div>
+    <div class="right">Con el sistema</div>
+  </div>
+
+  <div class="s5-table">
+    <div class="s5-row">
+      <div class="label">Captación</div>
+      <div class="bad"><span class="dot"></span>Tráfico que se va sin dejar rastro</div>
+      <div class="good"><span class="dot"></span>Cada visita tiene razón para quedarse</div>
+    </div>
+    <div class="s5-row">
+      <div class="label">Pipeline</div>
+      <div class="bad"><span class="dot"></span>Outreach manual. No escala.</div>
+      <div class="good"><span class="dot"></span>Secuencia automática de 60 días</div>
+    </div>
+    <div class="s5-row">
+      <div class="label">Prospectos tibios</div>
+      <div class="bad"><span class="dot"></span>Desaparecen para siempre</div>
+      <div class="good"><span class="dot"></span>Nurturing hasta que estén listos</div>
+    </div>
+    <div class="s5-row">
+      <div class="label">Prueba social</div>
+      <div class="bad"><span class="dot"></span>Promesa sin evidencia</div>
+      <div class="good"><span class="dot"></span>Framework de casos de estudio activo</div>
+    </div>
+    <div class="s5-row">
+      <div class="label">LinkedIn</div>
+      <div class="bad"><span class="dot"></span>Contenido sin sistema detrás</div>
+      <div class="good"><span class="dot"></span>Contenido semanal vinculado al funnel</div>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>05</strong> · 13 — Antes / después</div>
+</section>
+
+<!-- ════════════════════ SLIDE 6 — LOS NÚMEROS ════════════════════ -->
+<section class="slide" data-screen-label="06 Los numeros">
+  <h2 class="s6v-title">
+    Lo que se está perdiendo <span class="em">hoy.</span>
+  </h2>
+  <p class="s6v-sub">Tres cifras que ya está pagando el negocio — sin que aparezcan en el P&amp;L.</p>
+
+  <div class="s6v-grid">
+    <div class="s6v-cell">
+      <div class="v-eyebrow">Cada mes</div>
+      <div class="v-num">2–4</div>
+      <div class="v-desc">Leads calificados perdidos. Gente que estaba lista para hablar y nunca volvió.</div>
+    </div>
+    <div class="s6v-cell">
+      <div class="v-eyebrow">Ventana real</div>
+      <div class="v-num">90<small>d</small></div>
+      <div class="v-desc">De evaluación silenciosa. Si no hay sistema de recontacto, ese tiempo se evapora.</div>
+    </div>
+    <div class="s6v-cell hero">
+      <div class="v-eyebrow">Por proyecto</div>
+      <div class="v-num">€15K<small>+</small></div>
+      <div class="v-desc">El sistema se recupera <strong>con el primer cliente</strong> que el nurturing convierte.</div>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>06</strong> · 13 — Los números</div>
+</section>
+
+<!-- ════════════════════ SLIDE 7 — EL SISTEMA ════════════════════ -->
+<section class="slide" data-screen-label="07 El sistema">
+  <div class="s7v-title-block">
+    <h2 class="s7v-title">Tres piezas. <span class="em">Un sistema.</span></h2>
+    <p class="s7v-sub">No tres servicios sueltos. Tres engranajes que se alimentan entre sí.</p>
+  </div>
+
+  <div class="s7v-grid">
+    <div class="s7v-card">
+      <div class="v-num">Pieza 01</div>
+      <div class="v-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 12l4-4v3h12v2H7v3z"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+      </div>
+      <div class="v-name">Funnel de <span class="em">captación.</span></div>
+    </div>
+    <div class="s7v-card">
+      <div class="v-num">Pieza 02</div>
+      <div class="v-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      </div>
+      <div class="v-name">Secuencia de <span class="em">nurturing.</span></div>
+    </div>
+    <div class="s7v-card">
+      <div class="v-num">Pieza 03</div>
+      <div class="v-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 10v7"/><circle cx="7" cy="7" r="0.6" fill="currentColor"/><path d="M11 17v-4a3 3 0 0 1 6 0v4"/><path d="M11 13v-3"/></svg>
+      </div>
+      <div class="v-name">LinkedIn + <span class="em">contenido.</span></div>
+    </div>
+  </div>
+
+  <p class="s7v-foot">Las tres piezas <span class="em">se alimentan entre sí.</span></p>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>07</strong> · 13 — El sistema</div>
+</section>
+
+<!-- ════════════════════ SLIDE 8 — BONUS ════════════════════ -->
+<section class="slide" data-screen-label="08 Bonus">
+  <p class="eyebrow">Incluido en el setup · sin coste adicional</p>
+  <h2 class="s8v-title">Dos bonus que <span class="em">aceleran</span> los resultados.</h2>
+  <p class="s8v-sub">Pequeñas piezas que, sumadas al sistema, multiplican el output desde el día uno.</p>
+
+  <div class="s8v-list">
+    <div class="s8v-row">
+      <div class="check">
+        <svg viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg>
+      </div>
+      <div class="text">
+        <div class="name">Framework de prueba social</div>
+        <div class="desc">Para documentar y publicar casos de estudio de forma sistemática — convierte cada proyecto entregado en activo de captación.</div>
+      </div>
+    </div>
+    <div class="s8v-row">
+      <div class="check">
+        <svg viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg>
+      </div>
+      <div class="text">
+        <div class="name">2 lead magnets para LinkedIn</div>
+        <div class="desc">Por definir contigo en el kickoff — diseñados para tu audiencia exacta, no plantillas genéricas.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>08</strong> · 13 — Bonus</div>
+</section>
+
+<!-- ════════════════════ SLIDE 9 — TU PARTE ════════════════════ -->
+<section class="slide" data-screen-label="09 Tu parte">
+  <h2 class="s9v-title">Lo que <span class="em">necesitamos de ti.</span></h2>
+
+  <div class="s9v-list">
+    <div class="s9v-row">
+      <div class="v-num">01</div>
+      <div class="v-name">Sesión de kickoff</div>
+      <div class="v-meta">60 minutos. Una sola vez. Validamos contenido, tono y lineamientos.</div>
+    </div>
+    <div class="s9v-row">
+      <div class="v-num">02</div>
+      <div class="v-name">Acceso a web y assets de marca</div>
+      <div class="v-meta">La integración técnica la resolvemos nosotros — tú no tocas código.</div>
+    </div>
+    <div class="s9v-row">
+      <div class="v-num">03</div>
+      <div class="v-name">Revisión y aprobación</div>
+      <div class="v-meta">De cada entregable. Ningún email sale sin tu OK.</div>
+    </div>
+  </div>
+
+  <p class="s9v-foot">En total, no más de <span class="em">2–3 horas tuyas</span> durante los 30 días de setup.</p>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>09</strong> · 13 — Tu parte</div>
+</section>
+
+<!-- ════════════════════ SLIDE 10 — EL PROCESO ════════════════════ -->
+<section class="slide" data-screen-label="10 El proceso">
+  <h2 class="s10v-title">
+    30 días para tener el sistema en marcha.<br>
+    <span class="em">60 días</span> para las primeras consultas calificadas.
+  </h2>
+
+  <div class="s10v-timeline">
+    <div class="s10v-line"></div>
+    <div class="s10v-nodes">
+      <div class="s10v-node">
+        <div class="day">Día 0</div>
+        <div class="dot"></div>
+        <div class="label">Kickoff</div>
+      </div>
+      <div class="s10v-node">
+        <div class="day">Días 1 — 10</div>
+        <div class="dot"></div>
+        <div class="label">Landing + lead magnets</div>
+      </div>
+      <div class="s10v-node">
+        <div class="day">Días 11 — 20</div>
+        <div class="dot"></div>
+        <div class="label">Email + LinkedIn</div>
+      </div>
+      <div class="s10v-node now">
+        <div class="day">Días 21 — 30</div>
+        <div class="dot"></div>
+        <div class="label">Prueba social + entrega</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s10v-guarantee">
+    <div class="shield">
+      <svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
+    </div>
+    <div class="text">
+      <strong>Garantía.</strong>Sistema en 30 días. Leads calificados en 60 — o seguimos trabajando sin coste.
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>10</strong> · 13 — El proceso</div>
+</section>
+
+<!-- ════════════════════ SLIDE 11 — POR QUÉ DANIEL ════════════════════ -->
+<section class="slide s11" data-screen-label="11 Por que Daniel">
+  <div class="s11-left">
+    <h2 class="s11-title">
+      No contratas una agencia.<br>
+      <span class="em">Me integro en tu equipo</span><br>
+      como si fuera parte de él.
+    </h2>
+
+    <div class="s11-points">
+      <div class="s11-point">
+        <div class="head">Construyendo sistemas de captación desde 2019.</div>
+        <div class="body">Para profesionales con autoridad real en su sector — gente que ya tenía la pieza técnica, lo que necesitaban era el sistema que la convirtiera en pipeline.</div>
+      </div>
+      <div class="s11-point">
+        <div class="head">Ejecución personal, no delegada.</div>
+        <div class="body">El cliente habla con quien hace el trabajo. Sin capas de account manager, sin equipos rotando, sin la cuenta perdida en una bolsa de 30 clientes.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s11-right">
+    <div class="s11-photo-frame">
+      <img src="daniel-photo.png" alt="Daniel García de Celis">
+      <div class="s11-photo-tag">Daniel García de Celis · Copy Estratega</div>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>11</strong> · 13 — Daniel</div>
+</section>
+
+<!-- ════════════════════ SLIDE 12 — INVERSIÓN ════════════════════ -->
+<section class="slide" data-screen-label="12 Inversion">
+  <h2 class="s12v-title">La inversión, <span class="em">desglosada.</span></h2>
+
+  <div class="s12v-grid">
+    <div class="s12v-card">
+      <div class="label">Setup · Pago único</div>
+      <div class="price">€2.000</div>
+      <div class="price-tag">Todo construido e integrado en 30 días.</div>
+      <ul>
+        <li>Landing + lead magnets</li>
+        <li>Secuencia de 6 emails</li>
+        <li>LinkedIn + contenido semanal</li>
+        <li>Framework de prueba social</li>
+      </ul>
+    </div>
+
+    <div class="s12v-card">
+      <div class="label">Retainer · Desde el mes 2</div>
+      <div class="price">€600<small>/mes</small></div>
+      <div class="price-tag">Operación continua. Pausable o cancelable cuando quieras.</div>
+      <ul>
+        <li>Mantenimiento del sistema</li>
+        <li>Newsletters mensuales</li>
+        <li>Nuevos lead magnets</li>
+        <li>1 contenido semanal en LinkedIn</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="s12v-no">
+    <div class="nlabel">No incluye</div>
+    <div class="items">Gestión de respuestas a prospectos <span>·</span> Publicidad de pago <span>·</span> Herramientas y plataformas</div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>12</strong> · 13 — Inversión</div>
+</section>
+
+<!-- ════════════════════ SLIDE 13 — CIERRE ════════════════════ -->
+<section class="slide s13" data-screen-label="13 Cierre">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;width:100%;">
+    <p class="s13-eyebrow">Una última pregunta.</p>
+    <h2 class="s13-headline">
+      Alejandro,<br>
+      ¿arrancamos<br>
+      <span class="em">la semana que viene?</span>
+    </h2>
+
+    <div class="s13-contact">
+      <div class="who">Contacto directo</div>
+      <div class="what">Daniel García de Celis · Copy Estratega</div>
+    </div>
+  </div>
+
+  <div class="s13-bottom-brand">
+    <div class="brandmark">
+      <img src="logo-circle.png" alt="">
+      <span class="wordmark">Copy <em>Estratega</em></span>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>13</strong> · 13 — Cierre</div>
+</section>
+
+</deck-stage>
+
+<script src="deck-stage.js"></script>
+</body>
+</html>

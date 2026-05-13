@@ -1,0 +1,396 @@
+/* ============================================================
+   COPY ESTRATEGA — Design Tokens
+   colors_and_type.css
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ─── COLOR FOUNDATIONS ──────────────────────────────────── */
+
+:root {
+  /* Backgrounds */
+  --bg-base:       #0D0D0D;
+  --bg-surface:    #1A1A1A;
+  --bg-elevated:   #242424;
+  --bg-overlay:    rgba(13,13,13,0.85);
+
+  /* Borders */
+  --border:        #2A2A2A;
+  --border-strong: #3A3A3A;
+  --border-gold:   rgba(201,160,82,0.4);
+
+  /* Foreground / Text */
+  --fg-1:          #FFFFFF;
+  --fg-2:          #A8A8A8;
+  --fg-3:          #666666;
+
+  /* Gold Accent */
+  --gold:          #C9A052;
+  --gold-light:    #E4C87A;
+  --gold-dark:     #9A7838;
+  --gold-muted:    rgba(201,160,82,0.12);
+  --gold-glow:     0 0 24px rgba(201,160,82,0.28);
+
+  /* Status */
+  --success:       #4CAF7D;
+  --error:         #E05C5C;
+  --warning:       #E0AA3E;
+
+  /* ─── SEMANTIC COLOR VARS ──────────────────────────────── */
+  --color-bg:               var(--bg-base);
+  --color-surface:          var(--bg-surface);
+  --color-text:             var(--fg-1);
+  --color-text-muted:       var(--fg-2);
+  --color-text-subtle:      var(--fg-3);
+  --color-accent:           var(--gold);
+  --color-accent-hover:     var(--gold-light);
+  --color-accent-active:    var(--gold-dark);
+  --color-border:           var(--border);
+  --color-divider:          var(--border);
+}
+
+/* ─── TYPOGRAPHY FOUNDATIONS ─────────────────────────────── */
+
+:root {
+  /* Font Families */
+  --font-display:  'Playfair Display', Georgia, serif;
+  --font-body:     'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono:     'JetBrains Mono', 'Courier New', monospace;
+
+  /* Type Scale */
+  --text-xs:   11px;
+  --text-sm:   13px;
+  --text-base: 15px;
+  --text-md:   17px;
+  --text-lg:   20px;
+  --text-xl:   26px;
+  --text-2xl:  36px;
+  --text-3xl:  52px;
+  --text-4xl:  72px;
+
+  /* Line Heights */
+  --leading-tight:  1.15;
+  --leading-snug:   1.3;
+  --leading-normal: 1.55;
+  --leading-relaxed:1.75;
+
+  /* Letter Spacing */
+  --tracking-tight:  -0.03em;
+  --tracking-snug:   -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide:   0.06em;
+  --tracking-wider:  0.12em;
+
+  /* Font Weights */
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semibold:600;
+  --weight-bold:    700;
+
+  /* ─── SEMANTIC TYPE VARS ────────────────────────────────── */
+
+  /* Display / Hero */
+  --h1-font:    var(--font-display);
+  --h1-size:    var(--text-4xl);
+  --h1-weight:  var(--weight-semibold);
+  --h1-leading: var(--leading-tight);
+  --h1-tracking:var(--tracking-snug);
+
+  /* Section Headings */
+  --h2-font:    var(--font-display);
+  --h2-size:    var(--text-3xl);
+  --h2-weight:  var(--weight-semibold);
+  --h2-leading: var(--leading-tight);
+  --h2-tracking:var(--tracking-snug);
+
+  --h3-font:    var(--font-body);
+  --h3-size:    var(--text-xl);
+  --h3-weight:  var(--weight-semibold);
+  --h3-leading: var(--leading-snug);
+  --h3-tracking:var(--tracking-tight);
+
+  --h4-font:    var(--font-body);
+  --h4-size:    var(--text-lg);
+  --h4-weight:  var(--weight-semibold);
+  --h4-leading: var(--leading-snug);
+
+  /* Body */
+  --p-font:     var(--font-body);
+  --p-size:     var(--text-base);
+  --p-weight:   var(--weight-regular);
+  --p-leading:  var(--leading-relaxed);
+
+  --lead-font:    var(--font-body);
+  --lead-size:    var(--text-md);
+  --lead-weight:  var(--weight-light);
+  --lead-leading: var(--leading-relaxed);
+
+  /* UI */
+  --label-font:     var(--font-body);
+  --label-size:     var(--text-sm);
+  --label-weight:   var(--weight-medium);
+  --label-tracking: var(--tracking-wider);
+
+  --caption-font:   var(--font-body);
+  --caption-size:   var(--text-xs);
+  --caption-weight: var(--weight-regular);
+
+  --code-font:  var(--font-mono);
+  --code-size:  var(--text-sm);
+}
+
+/* ─── BASE RESET ──────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  background: var(--bg-base);
+  color: var(--fg-1);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Semantic element styles */
+h1 {
+  font-family: var(--h1-font);
+  font-size: var(--h1-size);
+  font-weight: var(--h1-weight);
+  line-height: var(--h1-leading);
+  letter-spacing: var(--h1-tracking);
+  color: var(--fg-1);
+  margin: 0 0 .5em;
+}
+
+h2 {
+  font-family: var(--h2-font);
+  font-size: var(--h2-size);
+  font-weight: var(--h2-weight);
+  line-height: var(--h2-leading);
+  letter-spacing: var(--h2-tracking);
+  color: var(--fg-1);
+  margin: 0 0 .5em;
+}
+
+h3 {
+  font-family: var(--h3-font);
+  font-size: var(--h3-size);
+  font-weight: var(--h3-weight);
+  line-height: var(--h3-leading);
+  letter-spacing: var(--h3-tracking);
+  color: var(--fg-1);
+  margin: 0 0 .4em;
+}
+
+h4 {
+  font-family: var(--h4-font);
+  font-size: var(--h4-size);
+  font-weight: var(--h4-weight);
+  line-height: var(--h4-leading);
+  color: var(--fg-1);
+  margin: 0 0 .35em;
+}
+
+p {
+  font-family: var(--p-font);
+  font-size: var(--p-size);
+  font-weight: var(--p-weight);
+  line-height: var(--p-leading);
+  color: var(--fg-2);
+  margin: 0 0 1em;
+}
+
+a {
+  color: var(--gold);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+a:hover { color: var(--gold-light); }
+
+code, pre {
+  font-family: var(--code-font);
+  font-size: var(--code-size);
+  background: var(--bg-elevated);
+  color: var(--gold-light);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ─── UTILITY CLASSES ─────────────────────────────────────── */
+
+.label {
+  font-family: var(--label-font);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.lead {
+  font-family: var(--lead-font);
+  font-size: var(--lead-size);
+  font-weight: var(--lead-weight);
+  line-height: var(--lead-leading);
+  color: var(--fg-2);
+}
+
+.text-gold   { color: var(--gold); }
+.text-muted  { color: var(--fg-2); }
+.text-subtle { color: var(--fg-3); }
+.font-display{ font-family: var(--font-display); }
+
+/* ─── SPACING SCALE ──────────────────────────────────────── */
+
+:root {
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+}
+
+/* ─── RADIUS ─────────────────────────────────────────────── */
+
+:root {
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:  12px;
+  --radius-xl:  20px;
+  --radius-full:9999px;
+}
+
+/* ─── SHADOW / ELEVATION ─────────────────────────────────── */
+
+:root {
+  --shadow-sm:  0 2px 8px rgba(0,0,0,0.32);
+  --shadow-md:  0 4px 24px rgba(0,0,0,0.4);
+  --shadow-lg:  0 8px 48px rgba(0,0,0,0.56);
+  --shadow-gold:0 0 24px rgba(201,160,82,0.28);
+  --shadow-inset:inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* ─── BUTTON BASE ─────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 12px 24px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 200ms ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--gold);
+  color: #0D0D0D;
+  box-shadow: var(--shadow-gold);
+}
+.btn-primary:hover {
+  background: var(--gold-light);
+  transform: scale(1.01);
+  color: #0D0D0D;
+}
+.btn-primary:active {
+  background: var(--gold-dark);
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--fg-1);
+  border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.btn-secondary:active {
+  border-color: var(--gold-dark);
+  transform: scale(0.98);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--fg-2);
+  padding: 10px 16px;
+}
+.btn-ghost:hover {
+  color: var(--fg-1);
+  background: var(--bg-elevated);
+}
+
+/* ─── CARD BASE ───────────────────────────────────────────── */
+
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-md);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-lg);
+}
+.card-gold {
+  border-color: var(--border-gold);
+}
+.card-gold:hover {
+  border-color: var(--gold);
+  box-shadow: var(--shadow-gold);
+}
+
+/* ─── BADGE / TAG ─────────────────────────────────────────── */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+.badge-gold {
+  background: var(--gold-muted);
+  color: var(--gold);
+  border: 1px solid var(--border-gold);
+}
+.badge-neutral {
+  background: var(--bg-elevated);
+  color: var(--fg-2);
+  border: 1px solid var(--border);
+}
+
+/* ─── DIVIDER ─────────────────────────────────────────────── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: var(--space-8) 0;
+}
+.divider-gold {
+  border-top-color: var(--border-gold);
+}

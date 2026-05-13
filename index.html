@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Copy Estratega · Propuestas</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A052;
+    --gold-light: #E4C87A;
+    --gold-dark: #9A7838;
+    --bg: #0D0D0D;
+    --surface: #161616;
+    --line: #2A2A2A;
+    --line-strong: #3A3A3A;
+    --fg-1: #FFFFFF;
+    --fg-2: #B5B5B5;
+    --fg-3: #777777;
+    --fg-4: #4A4A4A;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--fg-1);
+    font-family: var(--font-body);
+    min-height: 100vh;
+  }
+  body {
+    background-image: radial-gradient(rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size: 3px 3px;
+    display: flex;
+    flex-direction: column;
+  }
+  .page {
+    flex: 1;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 80px 40px 120px;
+    position: relative;
+  }
+  /* Header */
+  .brandmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brandmark .dot {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold);
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-style: italic;
+    font-weight: 600;
+  }
+  .brandmark .wordmark {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--fg-1);
+  }
+  .brandmark .wordmark em {
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 400;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 100px 0 32px;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(48px, 6vw, 88px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0 0 28px;
+    color: var(--fg-1);
+    max-width: 900px;
+    text-wrap: balance;
+  }
+  h1 em {
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .lede {
+    font-family: var(--font-body);
+    font-size: clamp(18px, 1.5vw, 22px);
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--fg-2);
+    max-width: 720px;
+    margin: 0 0 80px;
+  }
+
+  /* Cards */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 28px;
+    margin-bottom: 80px;
+  }
+  .card {
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 44px 44px 36px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 50px rgba(201,160,82,0.10);
+  }
+  .card .clabel {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 22px;
+  }
+  .card h2 {
+    font-family: var(--font-display);
+    font-size: 44px;
+    font-weight: 600;
+    color: var(--fg-1);
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    margin: 0 0 14px;
+  }
+  .card h2 em {
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .card .sub {
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--fg-3);
+    line-height: 1.5;
+    margin: 0 0 36px;
+    max-width: 440px;
+  }
+  .card .meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--fg-4);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .card .meta .arrow {
+    margin-left: auto;
+    color: var(--gold);
+    font-family: var(--font-body);
+    font-size: 20px;
+    transition: transform 0.2s ease;
+  }
+  .card:hover .meta .arrow { transform: translateX(6px); }
+  .card .meta span { color: var(--fg-3); }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 36px 40px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+  }
+  footer .meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+  }
+  footer .meta strong { color: var(--gold); font-weight: 500; }
+
+  /* Waves */
+  .waves {
+    position: fixed;
+    right: 0; bottom: 0;
+    width: 520px; height: 360px;
+    pointer-events: none;
+    opacity: 0.45;
+    z-index: 0;
+  }
+  .waves svg { width: 100%; height: 100%; display: block; }
+  .waves path { fill: none; stroke: var(--gold); stroke-width: 1.2; opacity: 0.35; }
+  .waves path:nth-child(1) { opacity: 0.10; }
+  .waves path:nth-child(2) { opacity: 0.15; }
+  .waves path:nth-child(3) { opacity: 0.22; }
+  .waves path:nth-child(4) { opacity: 0.30; }
+  .waves path:nth-child(5) { opacity: 0.42; }
+  .waves path:nth-child(6) { opacity: 0.55; stroke: var(--gold-light); }
+
+  .page, footer { position: relative; z-index: 1; }
+
+  @media (max-width: 720px) {
+    .page { padding: 60px 24px 80px; }
+    .cards { grid-template-columns: 1fr; }
+    .card { padding: 32px 28px; }
+    .card h2 { font-size: 32px; }
+    footer { flex-direction: column; align-items: flex-start; padding: 28px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="brandmark">
+    <span class="dot">e</span>
+    <span class="wordmark">Copy <em>Estratega</em></span>
+  </div>
+
+  <p class="eyebrow">Propuestas activas</p>
+  <h1>Sistemas de captación,<br><em>uno por cliente.</em></h1>
+  <p class="lede">Cada propuesta está diseñada para una llamada concreta. Selecciona la tuya — se navega con las flechas izquierda/derecha del teclado.</p>
+
+  <div class="cards">
+    <a href="viron/" class="card">
+      <div class="clabel">Propuesta · Mayo 2026</div>
+      <h2>Viron <em>Global Solutions.</em></h2>
+      <p class="sub">Sistema de captación para una consultora de IA con tráfico y autoridad — pero sin recontacto.</p>
+      <div class="meta">
+        <span>13 slides</span>
+        <span>·</span>
+        <span>Llamada de cierre</span>
+        <span class="arrow">→</span>
+      </div>
+    </a>
+
+    <a href="bildenlex/" class="card">
+      <div class="clabel">Propuesta · Mayo 2026</div>
+      <h2>Bildenlex <em>Abogados.</em></h2>
+      <p class="sub">Sistema de captación para despacho boutique con 150K visitas/año y cero leads automáticos.</p>
+      <div class="meta">
+        <span>13 slides</span>
+        <span>·</span>
+        <span>Llamada de cierre</span>
+        <span class="arrow">→</span>
+      </div>
+    </a>
+  </div>
+</div>
+
+<footer>
+  <div class="meta">Daniel García de Celis · <strong>Copy Estratega</strong></div>
+  <div class="meta">© 2026</div>
+</footer>
+
+<div class="waves" aria-hidden="true">
+  <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+    <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+    <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+    <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+    <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+    <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+    <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+  </svg>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,2008 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Bildenlex · Propuesta · Copy Estratega</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  /* ─── Deck-level overrides ─────────────────────────── */
+  html, body { background: #000; margin: 0; }
+  deck-stage { background: #000; }
+
+  :root {
+    --slide-pad-x: 140px;
+    --slide-pad-y: 100px;
+    --gold: #C9A052;
+    --gold-light: #E4C87A;
+    --gold-dark: #9A7838;
+    --red: #C95252;
+    --red-soft: #8a3a3a;
+    --bg: #0D0D0D;
+    --surface: #161616;
+    --surface-2: #1F1F1F;
+    --line: #2A2A2A;
+    --line-strong: #3A3A3A;
+    --fg-1: #FFFFFF;
+    --fg-2: #B5B5B5;
+    --fg-3: #777777;
+    --fg-4: #4A4A4A;
+  }
+
+  /* Slide canvas */
+  section.slide {
+    position: relative;
+    width: 1920px;
+    height: 1080px;
+    background: var(--bg);
+    color: var(--fg-1);
+    font-family: var(--font-body);
+    overflow: hidden;
+    padding: var(--slide-pad-y) var(--slide-pad-x);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Fine grain noise */
+  section.slide::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size: 3px 3px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Recurring wave motif — bottom-right corner */
+  .waves {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 520px;
+    height: 360px;
+    pointer-events: none;
+    opacity: 0.55;
+    z-index: 1;
+  }
+  .waves svg { width: 100%; height: 100%; display: block; }
+  .waves path {
+    fill: none;
+    stroke: var(--gold);
+    stroke-width: 1.2;
+    opacity: 0.35;
+  }
+  .waves path:nth-child(1) { opacity: 0.12; }
+  .waves path:nth-child(2) { opacity: 0.18; }
+  .waves path:nth-child(3) { opacity: 0.26; }
+  .waves path:nth-child(4) { opacity: 0.34; }
+  .waves path:nth-child(5) { opacity: 0.45; }
+  .waves path:nth-child(6) { opacity: 0.6; stroke: var(--gold-light); }
+
+  /* Brand mark (small) */
+  .brandmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 2;
+  }
+  .brandmark img {
+    width: 44px; height: 44px;
+    filter: invert(1);
+    opacity: 0.92;
+  }
+  .brandmark .wordmark {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--fg-1);
+  }
+  .brandmark .wordmark em {
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 400;
+  }
+
+  /* Slide chrome elements */
+  .slide-num {
+    position: absolute;
+    bottom: 56px;
+    left: var(--slide-pad-x);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--fg-4);
+    z-index: 3;
+  }
+  .slide-num strong { color: var(--gold); font-weight: 500; }
+
+  /* All content sits above motif */
+  .slide > * { position: relative; z-index: 2; }
+
+  /* ─── Typography helpers ──────────────────────── */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    color: var(--fg-1);
+    margin: 0;
+  }
+  .display.light { font-weight: 400; }
+  .display.italic { font-style: italic; }
+
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    color: var(--fg-3);
+    text-transform: uppercase;
+  }
+
+  .lede {
+    font-family: var(--font-body);
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1.45;
+    color: var(--fg-2);
+    max-width: 1200px;
+  }
+
+  .body {
+    font-family: var(--font-body);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--fg-2);
+  }
+
+  .micro {
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.55;
+    color: var(--fg-3);
+  }
+
+  .gold { color: var(--gold); }
+  .gold-light { color: var(--gold-light); }
+  .red { color: var(--red); }
+  .white { color: var(--fg-1); }
+  .muted { color: var(--fg-2); }
+  .subtle { color: var(--fg-3); }
+  .ital { font-style: italic; }
+
+  /* Hairline */
+  .hairline {
+    width: 100%; height: 1px;
+    background: var(--line);
+    border: none;
+  }
+  .hairline.gold {
+    background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--gold) 70%, transparent);
+    opacity: 0.5;
+  }
+
+  /* ─── Generic icon (SVG) tile ─────────────────── */
+  .icon-tile {
+    width: 56px; height: 56px;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    color: var(--gold);
+    flex-shrink: 0;
+    background: var(--surface);
+  }
+  .icon-tile svg {
+    width: 26px; height: 26px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ─── Slide-1 portada ─────────────────────────── */
+  .s1-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .s1-stack {
+    margin-top: auto;
+    margin-bottom: auto;
+    max-width: 1500px;
+  }
+  .s1-headline {
+    font-family: var(--font-display);
+    font-size: 96px;
+    font-weight: 600;
+    line-height: 1.04;
+    letter-spacing: -0.028em;
+    margin: 0;
+    color: var(--fg-1);
+  }
+  .s1-headline .accent {
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .s1-sub {
+    margin-top: 56px;
+    font-family: var(--font-body);
+    font-size: 26px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--fg-2);
+    max-width: 1100px;
+  }
+  .s1-sub strong { color: var(--gold-light); font-weight: 500; }
+  .s1-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .s1-bottom .meta { color: var(--fg-3); }
+
+  /* ─── Slide-2 Precio ──────────────────────────── */
+  section.slide.s2 {
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    padding-top: 160px;
+    padding-bottom: 160px;
+  }
+  .s2 .intro {
+    font-family: var(--font-body);
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--fg-3);
+    margin-bottom: 28px;
+    letter-spacing: 0.02em;
+  }
+  .s2 .pre {
+    font-family: var(--font-body);
+    font-size: 30px;
+    font-weight: 300;
+    color: var(--fg-1);
+    margin-bottom: 60px;
+    letter-spacing: -0.005em;
+  }
+  .s2 .price {
+    font-family: var(--font-display);
+    font-size: 220px;
+    font-weight: 700;
+    color: var(--fg-1);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin: 0;
+  }
+  .s2 .price .currency {
+    font-size: 110px;
+    vertical-align: top;
+    margin-right: 8px;
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .s2 .price .plus {
+    font-family: var(--font-body);
+    font-weight: 200;
+    color: var(--fg-3);
+    font-size: 70px;
+    margin: 0 28px;
+    vertical-align: middle;
+  }
+  .s2 .price .monthly {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 110px;
+    color: var(--gold);
+  }
+  .s2 .price .monthly small {
+    font-family: var(--font-body);
+    font-style: normal;
+    font-size: 36px;
+    color: var(--fg-3);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    margin-left: 6px;
+  }
+  .s2 .terms {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+    margin-top: 50px;
+  }
+  .s2 .terms span { margin: 0 14px; color: var(--gold); }
+  .s2 .closer {
+    font-family: var(--font-body);
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--fg-1);
+    margin-top: 90px;
+    letter-spacing: -0.005em;
+  }
+  .s2 .closer em { font-style: italic; color: var(--gold-light); }
+
+  /* ─── Slide-3 Espejo ─────────────────────────── */
+  .s3-title-row { margin-bottom: 60px; }
+  .s3-title {
+    font-family: var(--font-display);
+    font-size: 64px;
+    font-weight: 600;
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    margin: 0;
+  }
+  .s3-title .par {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--fg-3);
+    display: block;
+    margin-top: 18px;
+    letter-spacing: 0;
+  }
+  .s3-have-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .have-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 32px 32px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    min-height: 200px;
+  }
+  .have-card .icon-tile {
+    width: 52px; height: 52px;
+    border: 1px solid var(--line-strong);
+    color: var(--gold);
+  }
+  .have-card .have-num {
+    font-family: var(--font-display);
+    font-size: 44px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--fg-1);
+    letter-spacing: -0.02em;
+  }
+  .have-card .have-num small {
+    font-family: var(--font-body);
+    font-size: 18px;
+    color: var(--gold);
+    margin-left: 8px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  .have-card .have-label {
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--fg-2);
+  }
+
+  .s3-divider {
+    margin: 56px 0 44px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .s3-divider .line { flex: 1; height: 1px; background: var(--line); }
+  .s3-divider .label {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: -0.01em;
+  }
+
+  .s3-bad-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 36px;
+    align-items: end;
+  }
+  .bad-cell { display: flex; flex-direction: column; gap: 12px; }
+  .bad-cell .num {
+    font-family: var(--font-display);
+    font-size: 140px;
+    font-weight: 700;
+    color: var(--red);
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+  }
+  .bad-cell .desc {
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--fg-2);
+    max-width: 320px;
+  }
+
+  .s3-conclusion {
+    margin-top: 56px;
+    text-align: center;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 1.4;
+    color: var(--fg-1);
+    letter-spacing: -0.01em;
+  }
+  .s3-conclusion .em { color: var(--gold); font-weight: 500; }
+
+  /* ─── Slide-4 Problema ───────────────────────── */
+  .s4 { justify-content: space-between; }
+  .s4-title {
+    font-family: var(--font-display);
+    font-size: 84px;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0;
+    max-width: 1500px;
+  }
+  .s4-title .light {
+    display: block;
+    font-weight: 300;
+    color: var(--fg-2);
+    font-style: italic;
+    margin-top: 12px;
+  }
+  .s4-flow {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    justify-content: center;
+    margin: 60px 0;
+  }
+  .s4-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    min-width: 200px;
+  }
+  .s4-step .icon {
+    width: 92px; height: 92px;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--fg-1);
+    background: var(--surface);
+  }
+  .s4-step.gone .icon { color: var(--red); border-color: var(--red-soft); }
+  .s4-step .icon svg {
+    width: 38px; height: 38px;
+    fill: none; stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .s4-step .lab {
+    font-family: var(--font-body);
+    font-size: 19px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+  }
+  .s4-step.gone .lab { color: var(--red); }
+  .s4-arrow {
+    flex: 0 0 100px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--fg-3);
+  }
+  .s4-arrow svg {
+    width: 80px; height: 14px;
+    fill: none; stroke: currentColor;
+    stroke-width: 1.2;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .s4-stat {
+    font-family: var(--font-display);
+    font-size: 78px;
+    font-weight: 600;
+    color: var(--fg-1);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    text-align: center;
+  }
+  .s4-stat .pct {
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 700;
+    font-size: 110px;
+    margin-right: 8px;
+  }
+
+  /* ─── Slide-5 Antes/Después ───────────────────── */
+  .s5-eyebrow { text-align: center; margin-bottom: 52px; }
+  .s5-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    align-items: stretch;
+  }
+  .s5-col {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    padding: 50px 60px;
+  }
+  .s5-col.before { background: linear-gradient(180deg, rgba(201,82,82,0.04), transparent); }
+  .s5-col.after  { background: linear-gradient(180deg, rgba(201,160,82,0.06), transparent); }
+  .s5-vline { width: 1px; background: var(--line); }
+  .s5-header {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .s5-col.before .s5-header { color: var(--red); }
+  .s5-col.after  .s5-header { color: var(--gold); }
+  .s5-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .s5-step {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    font-family: var(--font-body);
+    font-size: 26px;
+    color: var(--fg-1);
+    font-weight: 400;
+  }
+  .s5-step .dot {
+    width: 10px; height: 10px;
+    background: var(--line-strong);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .s5-col.after .s5-step .dot { background: var(--gold); }
+  .s5-col.before .s5-step:last-child .dot { background: var(--red); }
+
+  .s5-spacer { flex: 1; }
+  .s5-result {
+    border-top: 1px solid var(--line);
+    padding-top: 36px;
+  }
+  .s5-result-num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .s5-col.before .s5-result-num {
+    font-size: 70px;
+    color: var(--red);
+  }
+  .s5-col.after .s5-result-num {
+    font-size: 88px;
+    color: var(--gold);
+  }
+  .s5-result-label {
+    margin-top: 14px;
+    font-family: var(--font-body);
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--fg-2);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .s5-col.after .s5-result-label { color: var(--gold-light); font-weight: 400; text-transform: none; font-style: italic; font-size: 24px; letter-spacing: 0; }
+
+  /* ─── Slide-6 Números ─────────────────────────── */
+  .s6-title { margin-bottom: 50px; }
+  .s6-title h2 {
+    font-family: var(--font-display);
+    font-size: 64px;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0;
+    max-width: 1400px;
+  }
+  .s6-title h2 .em {
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .s6-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 28px;
+  }
+  .s6-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 36px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .s6-card.hero {
+    background: linear-gradient(140deg, rgba(201,160,82,0.10), rgba(201,160,82,0.02));
+    border-color: var(--gold);
+    box-shadow: 0 0 60px rgba(201,160,82,0.12);
+  }
+  .s6-card.hero::after {
+    content: "";
+    position: absolute;
+    top: 32px; right: 32px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 16px rgba(201,160,82,0.7);
+  }
+  .s6-num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--fg-1);
+    font-size: 100px;
+  }
+  .s6-card.hero .s6-num { color: var(--gold); font-style: italic; }
+  .s6-num small {
+    font-family: var(--font-body);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--fg-3);
+    margin-left: 4px;
+    font-style: normal;
+  }
+  .s6-card .s6-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+  }
+  .s6-card.hero .s6-eyebrow { color: var(--gold); }
+  .s6-card .s6-desc {
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.45;
+    color: var(--fg-2);
+  }
+  .s6-card.hero .s6-desc { color: var(--fg-1); font-weight: 400; }
+
+  /* ─── Slide-7 Sistema ─────────────────────────── */
+  .s7-title-block { margin-bottom: 60px; max-width: 1400px; }
+  .s7-title {
+    font-family: var(--font-display);
+    font-size: 84px;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0 0 18px;
+  }
+  .s7-title .em { color: var(--gold); font-style: italic; font-weight: 500; }
+  .s7-sub {
+    font-family: var(--font-body);
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--fg-2);
+    line-height: 1.5;
+  }
+  .s7-list { display: flex; flex-direction: column; gap: 0; }
+  .s7-row {
+    display: grid;
+    grid-template-columns: 90px 280px 1fr 60px;
+    align-items: center;
+    gap: 40px;
+    padding: 40px 12px;
+    border-top: 1px solid var(--line);
+  }
+  .s7-row:last-child { border-bottom: 1px solid var(--line); }
+  .s7-row .num {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+  }
+  .s7-row .name {
+    font-family: var(--font-display);
+    font-size: 44px;
+    font-weight: 600;
+    color: var(--fg-1);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+  .s7-row .desc {
+    font-family: var(--font-body);
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1.45;
+    color: var(--fg-2);
+  }
+  .s7-row .icon {
+    color: var(--gold);
+    display: flex; justify-content: flex-end;
+  }
+  .s7-row .icon svg {
+    width: 36px; height: 36px;
+    fill: none; stroke: currentColor;
+    stroke-width: 1.3;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  /* ─── Slide-8 Bonus ───────────────────────────── */
+  .s8-eyebrow { margin-bottom: 32px; }
+  .s8-title {
+    font-family: var(--font-display);
+    font-size: 72px;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0;
+  }
+  .s8-sub {
+    font-family: var(--font-body);
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--fg-2);
+    line-height: 1.5;
+    margin: 18px 0 56px;
+    max-width: 1100px;
+  }
+  .s8-list { display: flex; flex-direction: column; gap: 22px; }
+  .s8-row {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--gold);
+    border-radius: 6px;
+    padding: 28px 36px;
+    display: grid;
+    grid-template-columns: 50px 1fr auto;
+    align-items: center;
+    gap: 32px;
+  }
+  .s8-row .check {
+    width: 40px; height: 40px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .s8-row .check svg {
+    width: 20px; height: 20px;
+    fill: none; stroke: currentColor;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .s8-row .text { display: flex; flex-direction: column; gap: 6px; }
+  .s8-row .name {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--fg-1);
+    letter-spacing: -0.015em;
+  }
+  .s8-row .desc {
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--fg-3);
+  }
+  .s8-row .live {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 6px 14px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .s8-row .live::before {
+    content: "";
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 8px var(--gold);
+  }
+
+  /* ─── Slide-9 Tu parte ────────────────────────── */
+  .s9-title {
+    font-family: var(--font-display);
+    font-size: 64px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 0 0 36px;
+  }
+  .s9-section-label {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--gold);
+    margin: 0 0 24px;
+    letter-spacing: -0.01em;
+  }
+  .s9-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 32px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 220px;
+  }
+  .s9-card .icon { color: var(--gold); }
+  .s9-card .icon svg {
+    width: 44px; height: 44px;
+    fill: none; stroke: currentColor;
+    stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .s9-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .s9-card .name {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--fg-1);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+  .s9-card .desc {
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--fg-2);
+    margin-top: auto;
+  }
+
+  .s9-not {
+    margin-top: 40px;
+  }
+  .s9-not-label {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--fg-3);
+    margin: 0 0 24px;
+    letter-spacing: -0.01em;
+  }
+  .s9-not-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .s9-not-card {
+    background: rgba(20,20,20,0.5);
+    border: 1px solid var(--line);
+    border-style: dashed;
+    border-radius: 8px;
+    padding: 22px 26px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-height: 0;
+  }
+  .s9-not-card .x {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--fg-4);
+    color: var(--fg-3);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .s9-not-card .x svg {
+    width: 14px; height: 14px;
+    fill: none; stroke: currentColor;
+    stroke-width: 1.6; stroke-linecap: round;
+  }
+  .s9-not-card .name {
+    font-family: var(--font-body);
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--fg-2);
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+  }
+
+  /* ─── Slide-10 Proceso ────────────────────────── */
+  .s10-title {
+    font-family: var(--font-display);
+    font-size: 64px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 0 0 30px;
+    max-width: 1500px;
+  }
+  .s10-title .em { color: var(--gold); font-style: italic; font-weight: 500; }
+  .s10-timeline {
+    margin: 70px 0 60px;
+    position: relative;
+  }
+  .s10-line {
+    position: absolute;
+    top: 32px;
+    left: 8%;
+    right: 8%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--line) 0%, var(--line) 70%, var(--gold) 100%);
+  }
+  .s10-nodes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    position: relative;
+    z-index: 2;
+  }
+  .s10-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 24px;
+  }
+  .s10-node .week {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+    height: 24px;
+  }
+  .s10-node .dot {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1.5px solid var(--line-strong);
+    position: relative;
+  }
+  .s10-node.now .dot {
+    background: var(--gold);
+    border-color: var(--gold);
+    box-shadow: 0 0 24px rgba(201,160,82,0.5);
+    width: 26px; height: 26px;
+  }
+  .s10-node .label {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--fg-1);
+    letter-spacing: -0.015em;
+  }
+  .s10-node.now .label { color: var(--gold); font-style: italic; }
+  .s10-node .sublabel {
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--fg-3);
+    margin-top: -10px;
+  }
+  .s10-scope {
+    text-align: center;
+    margin: 30px auto 50px;
+    max-width: 1500px;
+  }
+  .s10-scope p {
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--fg-3);
+    margin: 4px 0;
+    font-style: italic;
+  }
+  .s10-scope p span { color: var(--fg-4); margin: 0 10px; }
+
+  .s10-guarantee {
+    margin: 0 auto;
+    max-width: 920px;
+    background: var(--surface);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 28px 40px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    box-shadow: 0 0 40px rgba(201,160,82,0.1);
+  }
+  .s10-guarantee .shield {
+    width: 56px; height: 56px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+  .s10-guarantee .shield svg {
+    width: 100%; height: 100%;
+    fill: none; stroke: currentColor;
+    stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .s10-guarantee .text {
+    font-family: var(--font-body);
+    font-size: 20px;
+    color: var(--fg-1);
+    font-weight: 300;
+    line-height: 1.45;
+  }
+  .s10-guarantee .text strong {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--gold);
+    margin-right: 10px;
+    letter-spacing: -0.01em;
+  }
+
+  /* ─── Slide-11 Daniel ─────────────────────────── */
+  section.slide.s11 {
+    display: grid !important;
+    grid-template-columns: 1fr 600px;
+    gap: 80px;
+    align-items: center;
+    padding: 80px 100px 80px 200px;
+  }
+  section.slide.s11 .s11-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+  }
+  section.slide.s11 .s11-title {
+    font-size: 60px;
+    margin-bottom: 50px;
+    line-height: 1.05;
+  }
+  section.slide.s11 .s11-points { gap: 32px; }
+  section.slide.s11 .s11-point { max-width: none; }
+  section.slide.s11 .s11-point .head { font-size: 24px; line-height: 1.25; }
+  section.slide.s11 .s11-point .body { font-size: 17px; line-height: 1.55; }
+  .s11-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  section.slide.s11 .s11-right {
+    width: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .s11-photo-frame {
+    width: 600px; height: 820px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #0A0A0A;
+    border: 1px solid var(--line);
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 60px rgba(201,160,82,0.08);
+  }
+  .s11-photo-frame img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+  }
+  .s11-title {
+    font-family: var(--font-display);
+    font-size: 76px;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0 0 70px;
+  }
+  .s11-title .em { color: var(--gold); font-style: italic; font-weight: 500; }
+  .s11-points { display: flex; flex-direction: column; gap: 36px; }
+  .s11-point { display: flex; flex-direction: column; gap: 10px; max-width: 720px; }
+  .s11-point .head {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--fg-1);
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  .s11-point .body {
+    font-family: var(--font-body);
+    font-size: 19px;
+    font-weight: 300;
+    color: var(--fg-3);
+    line-height: 1.55;
+  }
+  .s11-right-DUP { display:none; }
+  .s11-photo-frame-DUP { display:none; }
+  .s11-photo-frame::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(13,13,13,0.55) 100%);
+  }
+  .s11-photo-tag {
+    position: absolute;
+    bottom: 36px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* ─── Slide-12 Inversión ─────────────────────── */
+  .s12-title {
+    font-family: var(--font-display);
+    font-size: 60px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 0 0 56px;
+    text-align: center;
+  }
+  .s12-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-bottom: 44px;
+  }
+  .s12-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 36px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 220px;
+  }
+  .s12-card .label {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .s12-card .price {
+    font-family: var(--font-display);
+    font-size: 88px;
+    font-weight: 700;
+    color: var(--fg-1);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .s12-card .price small {
+    font-family: var(--font-body);
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--fg-3);
+    margin-left: 6px;
+  }
+  .s12-card .desc {
+    font-family: var(--font-body);
+    font-size: 19px;
+    font-weight: 300;
+    color: var(--fg-2);
+    margin-top: auto;
+    line-height: 1.5;
+  }
+  .s12-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+  .s12-lines .row {
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--fg-2);
+  }
+  .s12-lines .row b {
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--fg-1);
+    margin-right: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+  .s12-lines .row.no b { color: var(--fg-3); }
+  .s12-lines .row.no { color: var(--fg-3); }
+  .s12-lines .dot { color: var(--fg-4); margin: 0 12px; }
+
+  /* ─── Slide-13 Cierre ─────────────────────────── */
+  .s13 { align-items: center; text-align: center; justify-content: center; }
+  .s13-eyebrow {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 36px;
+    color: var(--gold);
+    margin-bottom: 32px;
+  }
+  .s13-headline {
+    font-family: var(--font-display);
+    font-size: 180px;
+    font-weight: 700;
+    color: var(--fg-1);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin: 0 0 60px;
+  }
+  .s13-sub {
+    font-family: var(--font-body);
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--fg-2);
+    margin-bottom: 56px;
+  }
+  .s13-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 70px;
+    font-family: var(--font-body);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--fg-1);
+    line-height: 1.5;
+  }
+  .s13-steps span { color: var(--gold); margin-right: 16px; font-family: var(--font-mono); font-size: 16px; letter-spacing: 0.18em; }
+  .s13-contact {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    padding: 26px 56px;
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    background: rgba(201,160,82,0.06);
+  }
+  .s13-contact .who {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .s13-contact .what {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--fg-1);
+    letter-spacing: -0.01em;
+  }
+  .s13-bottom-brand {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+  }
+
+</style>
+
+<script type="application/json" id="speaker-notes">[]</script>
+</head>
+<body>
+
+<deck-stage>
+
+<!-- ════════════════════ SLIDE 1 — PORTADA ════════════════════ -->
+<section class="slide" data-screen-label="01 Portada">
+  <div class="s1-top" style="align-items:flex-start;">
+    <div class="brandmark">
+      <img src="logo-circle.png" alt="">
+      <span class="wordmark">Copy <em>Estratega</em></span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:14px;">
+      <span style="font-family:var(--font-mono);font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:var(--fg-3);font-weight:400;">Propuesta para</span>
+      <img src="bildenlex-logo.png" alt="Bildenlex" style="width:300px;height:300px;display:block;border-radius:50%;">
+    </div>
+  </div>
+
+  <div class="s1-stack">
+    <h1 class="s1-headline">
+      Tienes la <span class="accent">autoridad</span> que otros<br>
+      tardan décadas en construir.<br>
+      <span style="font-weight:300;color:#A8A8A8;font-style:italic;">Y el sistema de captación de un despacho que acaba de abrir.</span>
+    </h1>
+    <p class="s1-sub">
+      <strong>150.000 visitas al año.</strong> <strong>Cero leads</strong> capturados. Eso cambia hoy.
+    </p>
+  </div>
+
+  <div class="s1-bottom">
+    <div class="meta">Bildenlex Abogados</div>
+    <div class="meta">Mayo · 2026</div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>01</strong> · 13 — Portada</div>
+</section>
+
+<!-- ════════════════════ SLIDE 2 — PRECIO PRIMERO ════════════════════ -->
+<section class="slide s2" data-screen-label="02 Precio">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+    <p class="intro" style="margin:0;">Vamos a quitarnos la parte incómoda de encima.</p>
+    <p class="pre" style="margin:0;">La inversión para poner este sistema en marcha es de…</p>
+  </div>
+
+  <div class="price" style="margin:0;">
+    <span class="currency">$</span>1.800<span class="plus">+</span><span class="monthly">$500<small>/mes</small></span>
+  </div>
+
+  <div style="display:flex;flex-direction:column;align-items:center;gap:32px;">
+    <p class="terms" style="margin:0;"><span>·</span> Setup completo <span>·</span> 30 días <span>·</span> Sin sorpresas <span>·</span></p>
+    <p class="closer" style="margin:0;">Ahora te muestro <em>por qué tiene sentido.</em></p>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>02</strong> · 13 — La inversión</div>
+</section>
+
+<!-- ════════════════════ SLIDE 3 — ESPEJO ════════════════════ -->
+<section class="slide" data-screen-label="03 Espejo">
+  <div class="s3-title-row">
+    <h2 class="s3-title">
+      Lo que Bildenlex <span class="ital gold">ya tiene</span>
+      <span class="par">(y la mayoría de despachos tardará décadas en construir)</span>
+    </h2>
+  </div>
+
+  <div class="s3-have-grid">
+    <div class="have-card">
+      <div class="icon-tile">
+        <svg viewBox="0 0 24 24"><path d="M12 3 1 9l11 6 11-6-11-6z"/><path d="M5 11v5c2 1.5 4 2.5 7 2.5s5-1 7-2.5v-5"/></svg>
+      </div>
+      <div class="have-num">4 <small>países</small></div>
+      <div class="have-label">Docencia simultánea — universidades en Argentina, Uruguay, España y Chile</div>
+    </div>
+    <div class="have-card">
+      <div class="icon-tile">
+        <svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M4 8h16"/><path d="M5 8l3 12h8l3-12"/></svg>
+      </div>
+      <div class="have-num">20 <small>años</small></div>
+      <div class="have-label">Práctica exclusiva en Propiedad Intelectual y derecho tecnológico</div>
+    </div>
+    <div class="have-card">
+      <div class="icon-tile">
+        <svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+      </div>
+      <div class="have-num">150K <small>visitas/año</small></div>
+      <div class="have-label">Blog activo sobre temas de alta demanda en LATAM e Iberoamérica</div>
+    </div>
+  </div>
+
+  <div class="s3-divider">
+    <span class="line"></span>
+    <span class="label">Y sin embargo…</span>
+    <span class="line"></span>
+  </div>
+
+  <div class="s3-bad-grid">
+    <div class="bad-cell">
+      <div class="num">0</div>
+      <div class="desc">Leads capturados automáticamente — visitantes que se van sin dejar rastro</div>
+    </div>
+    <div class="bad-cell">
+      <div class="num">789</div>
+      <div class="desc">Seguidores en la página de empresa de LinkedIn</div>
+    </div>
+    <div class="bad-cell">
+      <div class="num">1</div>
+      <div class="desc">Único CTA en todo el sitio: "Contáctanos"</div>
+    </div>
+  </div>
+
+  <p class="s3-conclusion">El problema no es la autoridad. <span class="em">Es la infraestructura.</span></p>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>03</strong> · 13 — Espejo</div>
+</section>
+
+<!-- ════════════════════ SLIDE 4 — EL PROBLEMA ════════════════════ -->
+<section class="slide s4" data-screen-label="04 El problema">
+  <div>
+    <h2 class="s4-title">
+      El sitio está construido para quien <span class="gold ital">ya decidió.</span>
+      <span class="light">No para quien todavía está evaluando, investigando o ganando confianza.</span>
+    </h2>
+  </div>
+
+  <div class="s4-flow">
+    <div class="s4-step">
+      <div class="icon">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </div>
+      <div class="lab">Busca</div>
+    </div>
+    <div class="s4-arrow">
+      <svg viewBox="0 0 80 14"><path d="M2 7h70"/><path d="m66 2 6 5-6 5"/></svg>
+    </div>
+    <div class="s4-step">
+      <div class="icon">
+        <svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h7v18H6a2 2 0 0 1-2-2V5z"/><path d="M20 5a2 2 0 0 0-2-2h-5v18h5a2 2 0 0 0 2-2V5z"/></svg>
+      </div>
+      <div class="lab">Lee</div>
+    </div>
+    <div class="s4-arrow">
+      <svg viewBox="0 0 80 14"><path d="M2 7h70"/><path d="m66 2 6 5-6 5"/></svg>
+    </div>
+    <div class="s4-step gone">
+      <div class="icon">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+      </div>
+      <div class="lab">Se va</div>
+    </div>
+  </div>
+
+  <div class="s4-stat">
+    <span class="pct">97%</span>de tus visitantes se va sin dejar rastro.
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>04</strong> · 13 — El problema</div>
+</section>
+
+<!-- ════════════════════ SLIDE 5 — ANTES / DESPUÉS ════════════════════ -->
+<section class="slide" style="padding:80px 80px 120px;" data-screen-label="05 Antes y despues">
+  <p class="s5-eyebrow" style="font-family:var(--font-display);font-style:italic;font-weight:400;font-size:28px;color:var(--fg-3);margin:0 0 60px;">
+    Así llega hoy un prospecto a Bildenlex — y así llegaría con el sistema.
+  </p>
+
+  <div class="s5-grid">
+    <div class="s5-col before">
+      <div class="s5-header">Hoy</div>
+      <div class="s5-flow">
+        <div class="s5-step"><span class="dot"></span>Entra al sitio</div>
+        <div class="s5-step"><span class="dot"></span>Lee un artículo</div>
+        <div class="s5-step"><span class="dot"></span>Contacta o se va <span style="color:var(--fg-3);font-style:italic;font-size:18px;margin-left:8px;">(y la mayoría nunca vuelve)</span></div>
+      </div>
+      <div class="s5-spacer"></div>
+      <div class="s5-result">
+        <div class="s5-result-num">150K · 0</div>
+        <div class="s5-result-label">visitas · leads</div>
+      </div>
+    </div>
+
+    <div class="s5-vline"></div>
+
+    <div class="s5-col after">
+      <div class="s5-header">Con el sistema</div>
+      <div class="s5-flow">
+        <div class="s5-step"><span class="dot"></span>Entra al sitio</div>
+        <div class="s5-step"><span class="dot"></span>Lee un artículo</div>
+        <div class="s5-step"><span class="dot"></span>Contacta, o descarga un recurso</div>
+        <div class="s5-step"><span class="dot"></span>Proceso automatizado de nutrición y aumento de la confianza</div>
+        <div class="s5-step"><span class="dot"></span>Solicita una consulta</div>
+      </div>
+      <div class="s5-spacer"></div>
+      <div class="s5-result">
+        <div class="s5-result-num">Cliente en 30 días.</div>
+        <div class="s5-result-label">El prospecto de hoy, cliente del próximo mes.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>05</strong> · 13 — Antes / después</div>
+</section>
+
+<!-- ════════════════════ SLIDE 6 — LOS NÚMEROS ════════════════════ -->
+<section class="slide" data-screen-label="06 Los numeros">
+  <div class="s6-title">
+    <h2>
+      Un cliente nuevo al mes <span class="em">cubre la inversión.</span><br>
+      El resto es ganancia acumulada.
+    </h2>
+  </div>
+
+  <div class="s6-grid">
+    <div class="s6-card">
+      <div class="s6-eyebrow">Tráfico</div>
+      <div class="s6-num">150K<small>+</small></div>
+      <div class="s6-desc">Visitas al año al sitio de Bildenlex sin captura activa.</div>
+    </div>
+    <div class="s6-card">
+      <div class="s6-eyebrow">Hoy</div>
+      <div class="s6-num">0</div>
+      <div class="s6-desc">Leads automáticos generados por ese tráfico.</div>
+    </div>
+    <div class="s6-card">
+      <div class="s6-eyebrow">Conversión</div>
+      <div class="s6-num">3–5<small>%</small></div>
+      <div class="s6-desc">Conversión típica de lead magnets en servicios profesionales.</div>
+    </div>
+    <div class="s6-card hero">
+      <div class="s6-eyebrow">Valor por cliente</div>
+      <div class="s6-num">$600</div>
+      <div class="s6-desc">Valor conservador por expediente estándar de PI. <strong>Un solo cliente al mes amortiza el retainer.</strong></div>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>06</strong> · 13 — Los números</div>
+</section>
+
+<!-- ════════════════════ SLIDE 7 — EL SISTEMA ════════════════════ -->
+<section class="slide" data-screen-label="07 El sistema">
+  <div class="s7-title-block">
+    <h2 class="s7-title">Tres piezas. <span class="em">Un objetivo.</span></h2>
+    <p class="s7-sub">Convertir tu autoridad en consultas predecibles.</p>
+  </div>
+
+  <div class="s7-list">
+    <div class="s7-row">
+      <div class="num">01</div>
+      <div class="name">Captura</div>
+      <div class="desc">Página + Blog + Recursos gratuitos. El visitante deja su email <em style="color:var(--gold-light);">antes</em> de irse.</div>
+      <div class="icon">
+        <svg viewBox="0 0 24 24"><path d="M3 12l4-4v3h12v2H7v3z"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+      </div>
+    </div>
+    <div class="s7-row">
+      <div class="num">02</div>
+      <div class="name">Nutrición</div>
+      <div class="desc">Muchos impactos en 30 días. El sistema mantiene el contacto y construye confianza en tu nombre.</div>
+      <div class="icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      </div>
+    </div>
+    <div class="s7-row">
+      <div class="num">03</div>
+      <div class="name">LinkedIn</div>
+      <div class="desc">Contenido regular para posicionarte como referente.</div>
+      <div class="icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 10v7"/><circle cx="7" cy="7" r="0.6" fill="currentColor"/><path d="M11 17v-4a3 3 0 0 1 6 0v4"/><path d="M11 13v-3"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>07</strong> · 13 — El sistema</div>
+</section>
+
+<!-- ════════════════════ SLIDE 8 — BONUS ════════════════════ -->
+<section class="slide" data-screen-label="08 Bonus">
+  <p class="eyebrow s8-eyebrow">Incluido en el setup · sin coste adicional</p>
+  <h2 class="s8-title">Tres recursos listos para usar.</h2>
+  <p class="s8-sub">Tres puertas de entrada para que el prospecto deje su email — cada una habla a un perfil distinto.</p>
+
+  <div class="s8-list">
+    <div class="s8-row">
+      <div class="check">
+        <svg viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg>
+      </div>
+      <div class="text">
+        <div class="name">Checklist Legal para Emprendedores</div>
+        <div class="desc">Lead magnet de entrada — perfil emprendedor que está formando su startup.</div>
+      </div>
+      <span class="live">Ya en vivo</span>
+    </div>
+    <div class="s8-row">
+      <div class="check">
+        <svg viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg>
+      </div>
+      <div class="text">
+        <div class="name">Guía para registrar tu marca en Argentina 2026</div>
+        <div class="desc">Lead magnet de alta intención — quien busca registrar marca está a un paso de contratar.</div>
+      </div>
+    </div>
+    <div class="s8-row">
+      <div class="check">
+        <svg viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg>
+      </div>
+      <div class="text">
+        <div class="name">Protege tu software y tu app</div>
+        <div class="desc">Lead magnet vertical tech — apunta directo al cliente B2B/SaaS de mayor ticket.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>08</strong> · 13 — Bonus</div>
+</section>
+
+<!-- ════════════════════ SLIDE 9 — TU PARTE ════════════════════ -->
+<section class="slide" data-screen-label="09 Tu parte">
+  <h2 class="s9-title">Lo que <span class="gold ital">necesitamos de ti.</span></h2>
+
+  <div class="s9-grid">
+    <div class="s9-card">
+      <div class="icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      </div>
+      <div class="name">1 sesión<br>de 60 min</div>
+      <div class="desc">Validar contenido, tono y lineamientos. Una sola conversación, una vez.</div>
+    </div>
+    <div class="s9-card">
+      <div class="icon">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="14" r="4"/><path d="m12 11 8-8"/><path d="m17 6 3 3"/><path d="m20 3 1 1"/></svg>
+      </div>
+      <div class="name">Acceso a<br>WordPress</div>
+      <div class="desc">La integración técnica la resolvemos juntos — tú no tocas código.</div>
+    </div>
+    <div class="s9-card">
+      <div class="icon">
+        <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+      </div>
+      <div class="name">Revisión y<br>aprobación</div>
+      <div class="desc">Tú validas, nosotros ejecutamos. Ningún email sale sin tu OK.</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--font-display);font-size:34px;font-weight:500;font-style:italic;color:var(--fg-3);margin:36px 0 18px;letter-spacing:-0.01em;">Lo que <span style="color:var(--fg-2);">no</span> necesitamos.</h3>
+
+  <div class="s9-grid" style="gap:18px;">
+    <div class="s9-card" style="min-height:0;padding:22px 26px;gap:12px;opacity:0.7;">
+      <div class="icon" style="color:var(--fg-3);">
+        <svg viewBox="0 0 24 24" style="width:32px;height:32px;"><path d="M5 5l14 14M19 5 5 19"/></svg>
+      </div>
+      <div class="name" style="font-size:22px;color:var(--fg-2);">Cambios en<br>tu rutina</div>
+      <div class="desc" style="font-size:15px;">Sigues haciendo tu trabajo igual que hoy.</div>
+    </div>
+    <div class="s9-card" style="min-height:0;padding:22px 26px;gap:12px;opacity:0.7;">
+      <div class="icon" style="color:var(--fg-3);">
+        <svg viewBox="0 0 24 24" style="width:32px;height:32px;"><path d="M5 5l14 14M19 5 5 19"/></svg>
+      </div>
+      <div class="name" style="font-size:22px;color:var(--fg-2);">Nuevas<br>herramientas</div>
+      <div class="desc" style="font-size:15px;">Trabajamos sobre tu stack actual.</div>
+    </div>
+    <div class="s9-card" style="min-height:0;padding:22px 26px;gap:12px;opacity:0.7;">
+      <div class="icon" style="color:var(--fg-3);">
+        <svg viewBox="0 0 24 24" style="width:32px;height:32px;"><path d="M5 5l14 14M19 5 5 19"/></svg>
+      </div>
+      <div class="name" style="font-size:22px;color:var(--fg-2);">Horas semanales<br>de tu tiempo</div>
+      <div class="desc" style="font-size:15px;">Una sola sesión al inicio. El resto lo ejecutamos.</div>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>09</strong> · 13 — Tu parte</div>
+</section>
+
+<!-- ════════════════════ SLIDE 10 — EL PROCESO ════════════════════ -->
+<section class="slide" data-screen-label="10 El proceso">
+  <h2 class="s10-title">
+    30 días para tener el sistema en marcha.<br>
+    <span class="em">60 días</span> para las primeras consultas calificadas.
+  </h2>
+
+  <div class="s10-timeline">
+    <div class="s10-line"></div>
+    <div class="s10-nodes">
+      <div class="s10-node">
+        <div class="week">Semana 1</div>
+        <div class="dot"></div>
+        <div class="label">Validación</div>
+        <div class="sublabel">Sesión de 60 min · contenido y tono</div>
+      </div>
+      <div class="s10-node">
+        <div class="week">Semanas 2 — 3</div>
+        <div class="dot"></div>
+        <div class="label">Construcción</div>
+        <div class="sublabel">Página, emails, lead magnets, automatización</div>
+      </div>
+      <div class="s10-node">
+        <div class="week">Semana 4</div>
+        <div class="dot"></div>
+        <div class="label">En vivo</div>
+        <div class="sublabel">Sistema activo y capturando leads</div>
+      </div>
+      <div class="s10-node now">
+        <div class="week">Mes 2 +</div>
+        <div class="dot"></div>
+        <div class="label">Operación continua</div>
+        <div class="sublabel">Newsletter, LinkedIn, mantenimiento</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s10-scope">
+    <p>Newsletter semanal <span>·</span> 2 posts en LinkedIn por semana <span>·</span> Mantenimiento técnico incluido</p>
+    <p style="color:var(--fg-4);">Gestión de respuestas a prospectos: a cargo de Bildenlex</p>
+  </div>
+
+  <div class="s10-guarantee">
+    <div class="shield">
+      <svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
+    </div>
+    <div class="text">
+      <strong>Garantía.</strong>60 días para las primeras consultas — o seguimos trabajando sin coste adicional hasta que lleguen.
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>10</strong> · 13 — El proceso</div>
+</section>
+
+<!-- ════════════════════ SLIDE 11 — POR QUÉ DANIEL ════════════════════ -->
+<section class="slide s11" data-screen-label="11 Por que Daniel">
+  <div class="s11-left">
+    <h2 class="s11-title">
+      No contratas una agencia.<br>
+      <span class="em">Contratas a la persona</span><br>
+      que va a hacer el trabajo.
+    </h2>
+
+    <div class="s11-points">
+      <div class="s11-point">
+        <div class="head">Trabajando con profesionales de alto nivel desde 2019.</div>
+        <div class="body">Clientes que ya tenían autoridad — lo que necesitaban era un sistema que la convirtiera en pipeline, no más estrategia teórica.</div>
+      </div>
+      <div class="s11-point">
+        <div class="head">Máximo 2 clientes simultáneos.</div>
+        <div class="body">Atención total, ejecución personal, sin dispersión ni cuentas perdidas en una bolsa de 30 clientes.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s11-right">
+    <div class="s11-photo-frame">
+      <img src="daniel-photo.png" alt="Daniel De Celis">
+      <div class="s11-photo-tag">Daniel García de Celis · Copy Estratega</div>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>11</strong> · 13 — Daniel</div>
+</section>
+
+<!-- ════════════════════ SLIDE 12 — INVERSIÓN ════════════════════ -->
+<section class="slide" data-screen-label="12 Inversion">
+  <h2 class="s12-title" style="margin-bottom:36px;">La inversión para poner este sistema en marcha.</h2>
+
+  <div class="s12-grid" style="margin-bottom:28px;">
+    <div class="s12-card">
+      <div class="label">Setup · Pago único</div>
+      <div class="price">$1.800<small>USD</small></div>
+      <div class="desc">Todo construido, integrado y en marcha en 30 días.</div>
+    </div>
+    <div class="s12-card">
+      <div class="label">Retainer · Mensual</div>
+      <div class="price">$500<small>USD/mes</small></div>
+      <div class="desc">Operación continua desde el mes 2 — pausable o cancelable cuando quieras.</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;flex:1;">
+    <!-- INCLUYE -->
+    <div style="background:rgba(201,160,82,0.06);border:1.5px solid var(--gold);border-radius:8px;padding:32px 36px;display:flex;flex-direction:column;gap:16px;box-shadow:0 0 50px rgba(201,160,82,0.10);">
+      <div style="font-family:var(--font-mono);font-size:13px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);">Incluye</div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
+        <li style="font-family:var(--font-body);font-size:18px;font-weight:400;color:var(--fg-1);display:flex;align-items:center;gap:14px;line-height:1.3;"><span style="color:var(--gold);flex-shrink:0;">✓</span>Página de captura</li>
+        <li style="font-family:var(--font-body);font-size:18px;font-weight:400;color:var(--fg-1);display:flex;align-items:center;gap:14px;line-height:1.3;"><span style="color:var(--gold);flex-shrink:0;">✓</span>3 lead magnets listos para usar</li>
+        <li style="font-family:var(--font-body);font-size:18px;font-weight:400;color:var(--fg-1);display:flex;align-items:center;gap:14px;line-height:1.3;"><span style="color:var(--gold);flex-shrink:0;">✓</span>Secuencia de 6 emails automatizada</li>
+        <li style="font-family:var(--font-body);font-size:18px;font-weight:400;color:var(--fg-1);display:flex;align-items:center;gap:14px;line-height:1.3;"><span style="color:var(--gold);flex-shrink:0;">✓</span>2 posts en LinkedIn por semana</li>
+        <li style="font-family:var(--font-body);font-size:18px;font-weight:400;color:var(--fg-1);display:flex;align-items:center;gap:14px;line-height:1.3;"><span style="color:var(--gold);flex-shrink:0;">✓</span>Newsletter semanal</li>
+        <li style="font-family:var(--font-body);font-size:18px;font-weight:400;color:var(--fg-1);display:flex;align-items:center;gap:14px;line-height:1.3;"><span style="color:var(--gold);flex-shrink:0;">✓</span>Mantenimiento técnico</li>
+      </ul>
+      <div style="margin-top:12px;padding-top:14px;border-top:1px solid rgba(201,160,82,0.25);font-family:var(--font-body);font-size:14px;color:var(--fg-3);font-weight:300;">
+        <span style="color:var(--fg-2);">No incluye:</span> gestión de respuestas a prospectos · publicidad pagada · herramientas de email marketing
+      </div>
+    </div>
+
+    <!-- GARANTÍA -->
+    <div style="background:rgba(201,160,82,0.06);border:1.5px solid var(--gold);border-radius:8px;padding:32px 36px;display:flex;flex-direction:column;gap:18px;box-shadow:0 0 50px rgba(201,160,82,0.10);">
+      <div style="font-family:var(--font-mono);font-size:13px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:12px;">
+        <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;"><path d="M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
+        Garantía
+      </div>
+      <div style="font-family:var(--font-display);font-size:40px;font-weight:600;color:var(--fg-1);line-height:1.1;letter-spacing:-0.02em;">
+        Sistema en 30 días.<br><span style="color:var(--gold);font-style:italic;">Consultas en 60.</span>
+      </div>
+      <div style="font-family:var(--font-body);font-size:18px;font-weight:300;color:var(--fg-2);line-height:1.5;margin-top:auto;">
+        Si no llegan en ese plazo, seguimos trabajando <strong style="color:var(--fg-1);font-weight:500;">sin coste adicional</strong> hasta que lleguen.
+      </div>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>12</strong> · 13 — Inversión</div>
+</section>
+
+<!-- ════════════════════ SLIDE 13 — CIERRE ════════════════════ -->
+<section class="slide s13" data-screen-label="13 Cierre">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;width:100%;">
+    <p class="s13-eyebrow">¿Arrancamos?</p>
+    <h2 class="s13-headline">El siguiente<br>paso es <span class="gold ital">simple.</span></h2>
+
+    <div class="s13-steps">
+      <div><span>01</span>Confirma antes del 18 de mayo.</div>
+      <div><span>02</span>Sesión inicial esa misma semana.</div>
+      <div><span>03</span>30 días para montar el sistema.</div>
+    </div>
+
+    <div class="s13-contact">
+      <div class="who">Contacto directo</div>
+      <div class="what">Daniel García de Celis · Copy Estratega</div>
+    </div>
+  </div>
+
+  <div class="s13-bottom-brand">
+    <div class="brandmark">
+      <img src="logo-circle.png" alt="">
+      <span class="wordmark">Copy <em>Estratega</em></span>
+    </div>
+  </div>
+
+  <div class="waves" aria-hidden="true">
+    <svg viewBox="0 0 520 360" preserveAspectRatio="none">
+      <path d="M0,300 C130,260 260,340 390,290 C460,265 490,275 520,260" />
+      <path d="M0,260 C130,220 260,300 390,250 C460,225 490,235 520,220" />
+      <path d="M0,220 C130,180 260,260 390,210 C460,185 490,195 520,180" />
+      <path d="M0,180 C130,140 260,220 390,170 C460,145 490,155 520,140" />
+      <path d="M0,140 C130,100 260,180 390,130 C460,105 490,115 520,100" />
+      <path d="M0,100 C130,60 260,140 390,90 C460,65 490,75 520,60" />
+    </svg>
+  </div>
+
+  <div class="slide-num"><strong>13</strong> · 13 — Cierre</div>
+</section>
+
+</deck-stage>
+
+<script src="deck-stage.js"></script>
+</body>
+</html>
