@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notas · Bildenlex · Daniel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0F0F0F;
+    --surface: #1A1A1A;
+    --surface-2: #222222;
+    --border: #2E2E2E;
+    --gold: #C9A052;
+    --gold-soft: rgba(201,160,82,0.12);
+    --green: #4CAF7D;
+    --green-soft: rgba(76,175,125,0.10);
+    --red: #E05555;
+    --blue-soft: rgba(100,149,237,0.10);
+    --blue: #6495ED;
+    --fg-1: #F0F0F0;
+    --fg-2: #B0B0B0;
+    --fg-3: #666;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg-1);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+    z-index: 200;
+  }
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15,15,15,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    color: var(--fg-1);
+  }
+  .header-title span { color: var(--gold); font-style: italic; }
+
+  .header-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--fg-3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .nav-pills {
+    display: flex;
+    gap: 6px;
+    padding: 12px 28px;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    scrollbar-width: none;
+  }
+  .nav-pills::-webkit-scrollbar { display: none; }
+
+  .pill {
+    flex-shrink: 0;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--fg-3);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .pill:hover { border-color: var(--gold); color: var(--gold); }
+  .pill.active { background: var(--gold); border-color: var(--gold); color: #000; font-weight: 600; }
+
+  .main {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 40px 28px 110px;
+  }
+
+  .slide-notes { display: none; animation: fadeIn 0.18s ease; }
+  .slide-notes.visible { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Cabecera slide */
+  .slide-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .badge {
+    flex-shrink: 0;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--gold-soft);
+    border: 1px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gold);
+  }
+
+  .slide-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--fg-2);
+    line-height: 1.3;
+  }
+
+  /* Bloque principal — lo que dices */
+  .script {
+    background: var(--green-soft);
+    border: 1px solid rgba(76,175,125,0.25);
+    border-left: 3px solid var(--green);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--fg-1);
+    line-height: 1.75;
+  }
+
+  .script p { margin-bottom: 14px; }
+  .script p:last-child { margin-bottom: 0; }
+
+  .script em {
+    font-style: italic;
+    color: #8ee4b0;
+  }
+
+  .script strong {
+    font-weight: 600;
+    color: #fff;
+  }
+
+  /* Variante — continuación del guion */
+  .script-cont {
+    background: rgba(76,175,125,0.05);
+    border: 1px solid rgba(76,175,125,0.15);
+    border-left: 3px solid rgba(76,175,125,0.4);
+    border-radius: 8px;
+    padding: 20px 28px;
+    margin-bottom: 20px;
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--fg-2);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* Objeción */
+  .objection {
+    background: var(--surface-2);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+
+  .obj-q {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--red);
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
+  }
+  .obj-q::before { content: '↗ Si dice: '; font-weight: 300; color: var(--fg-3); }
+
+  .obj-a {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--fg-1);
+    line-height: 1.65;
+    padding-left: 14px;
+    border-left: 2px solid var(--green);
+  }
+
+  /* Nota táctica — mínima */
+  .tactic {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--fg-3);
+    letter-spacing: 0.05em;
+    padding: 8px 0;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .tactic::before {
+    content: '//';
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  /* Nav inferior */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(15,15,15,0.97);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-btn {
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--fg-2);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .nav-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  .slide-counter {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--fg-3);
+    text-align: center;
+  }
+  .slide-counter .cur { color: var(--gold); font-size: 16px; font-weight: 600; }
+
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="header">
+  <div class="header-title">Notas · <span>Bildenlex</span></div>
+  <div class="header-meta">Daniel · Mayo 2026</div>
+</div>
+
+<div class="nav-pills" id="navPills"></div>
+
+<div class="main" id="main">
+
+  <!-- S1 PORTADA -->
+  <div class="slide-notes visible" data-slide="1">
+    <div class="slide-header">
+      <div class="badge">01</div>
+      <h2>Portada</h2>
+    </div>
+
+    <div class="tactic">Slide en pantalla mientras se conecta. Arranca sin preámbulo.</div>
+
+    <div class="script">
+      <p>Guillermo, gracias por el tiempo. Voy directo al grano porque sé que lo tienes limitado.</p>
+      <p>Antes de esta llamada investigué a fondo Bildenlex — el sitio, el blog, LinkedIn, la página de empresa. Lo que encontré me dejó con ganas de hablar contigo, porque hay algo muy concreto que está pasando que cuesta dinero cada mes.</p>
+      <p>Te lo voy a mostrar todo, con números reales del despacho. Y vamos a empezar por lo más incómodo.</p>
+    </div>
+  </div>
+
+  <!-- S2 PRECIO -->
+  <div class="slide-notes" data-slide="2">
+    <div class="slide-header">
+      <div class="badge">02</div>
+      <h2>El precio primero</h2>
+    </div>
+
+    <div class="tactic">Di el precio con calma. Sin disculparte. Si hay silencio, déjalo.</div>
+
+    <div class="script">
+      <p>Vamos a quitarnos la parte incómoda de encima desde el principio.</p>
+      <p>Poner el sistema en marcha tiene un coste de 1.800 dólares de setup — todo construido e integrado en 30 días. A partir del mes dos, la operación continua son 500 dólares al mes.</p>
+      <p>Ahora te muestro por qué esos números tienen sentido — y por qué la pregunta relevante no es si puedes permitírtelo, sino cuánto te está costando cada mes no tenerlo.</p>
+    </div>
+
+    <div class="objection">
+      <div class="obj-q">"Me parece mucho dinero para empezar."</div>
+      <div class="obj-a">Tiene sentido que lo evalúes. Dame diez minutos más y te lo muestro en números del propio Bildenlex — un solo cliente nuevo al mes ya cubre el setup completo. Si al final no cuadra, me lo dices y sin problema.</div>
+    </div>
+  </div>
+
+  <!-- S3 ESPEJO -->
+  <div class="slide-notes" data-slide="3">
+    <div class="slide-header">
+      <div class="badge">03</div>
+      <h2>Espejo — tu punto de partida</h2>
+    </div>
+
+    <div class="tactic">Parte superior: energía positiva. Parte inferior: baja el ritmo, deja respirar los números.</div>
+
+    <div class="script">
+      <p>Antes de hablar del sistema, quería que vieras lo que encontré cuando investigué Bildenlex. Porque el punto de partida importa mucho para entender qué hay que hacer.</p>
+      <p>Guillermo, tienes una trayectoria que el 99% de los abogados del mercado hispanohablante no puede replicar. Veinte años de práctica exclusiva en propiedad intelectual y derecho tecnológico. Docencia activa en cuatro países al mismo tiempo. Menciones en iProUP y FM Milenium. Speaker en el Congreso Legaltech. Organizador del Global Legal Hackathon desde Buenos Aires. Un blog con 150.000 visitas al año sobre los temas exactos que busca tu cliente ideal cuando tiene un problema real.</p>
+      <p>Todo eso es real y es tuyo.</p>
+    </div>
+
+    <div class="script-cont">
+      Pausa. Luego:
+    </div>
+
+    <div class="script">
+      <p>Y sin embargo — cero leads capturados automáticamente. 789 seguidores en la página de empresa de LinkedIn con 20 años de historia. Un único CTA en todo el sitio: "Contáctanos".</p>
+      <p>El problema no es la autoridad. El problema es la infraestructura que conecta esa autoridad con las personas que más se beneficiarían de trabajar contigo.</p>
+    </div>
+  </div>
+
+  <!-- S4 PROBLEMA -->
+  <div class="slide-notes" data-slide="4">
+    <div class="slide-header">
+      <div class="badge">04</div>
+      <h2>El problema central</h2>
+    </div>
+
+    <div class="tactic">Cuéntalo como una historia. Baja el ritmo en "sale del sitio".</div>
+
+    <div class="script">
+      <p>Un emprendedor tiene un problema. Busca en Google "cómo registro mi marca en Argentina" o "me hicieron un deepfake, qué puedo hacer". Encuentra el blog de Bildenlex. Lee el artículo. Aprende algo útil. Empieza a confiar en el criterio del despacho.</p>
+      <p>Pero no está listo para contratar todavía. Quiere pensar, comparar opciones, hablar con su socio.</p>
+      <p>En ese momento, no hay nada que lo retenga. No hay ningún recurso que justifique dejar su email. No hay ningún paso intermedio entre "me interesa" y "agendo una cita de pago". Sale del sitio sin dejar ningún rastro.</p>
+      <p>Y el esfuerzo de SEO que trajo esa visita se convierte en cero.</p>
+      <p>El 97% de tus visitantes se va así, cada día, sin que puedas hacer nada.</p>
+    </div>
+
+    <div class="objection">
+      <div class="obj-q">"¿De dónde sale ese 97%?"</div>
+      <div class="obj-a">Es aritmética del embudo actual: si el único CTA es "reserva una cita" y la mayoría de visitas llegan por artículos de blog de gente que todavía está evaluando si necesita un abogado, ese tráfico se evapora. No es una estadística sectorial, es la lógica del sitio tal y como está hoy.</div>
+    </div>
+  </div>
+
+  <!-- S5 ANTES/DESPUÉS -->
+  <div class="slide-notes" data-slide="5">
+    <div class="slide-header">
+      <div class="badge">05</div>
+      <h2>Antes / Después</h2>
+    </div>
+
+    <div class="tactic">No leas el slide. 3-4 segundos de silencio. Luego la pregunta retórica.</div>
+
+    <div class="script">
+      <p>En la columna izquierda está lo que pasa hoy con cada persona que llega al blog. En la columna derecha, lo que pasaría con el sistema en marcha.</p>
+      <p>La diferencia no es magia — es un mecanismo que captura al visitante antes de que se vaya, y que durante los próximos 30 días mantiene a Bildenlex presente en su mente hasta que esté listo para contratar. Sin que tú hagas nada.</p>
+    </div>
+
+    <div class="script-cont">
+      Pausa. Luego:
+    </div>
+
+    <div class="script">
+      <p>¿Cuántos de esos 150.000 visitantes anuales crees que están hoy en la columna de la izquierda?</p>
+    </div>
+  </div>
+
+  <!-- S6 NÚMEROS -->
+  <div class="slide-notes" data-slide="6">
+    <div class="slide-header">
+      <div class="badge">06</div>
+      <h2>Los números</h2>
+    </div>
+
+    <div class="tactic">Preséntalo como aritmética verificable, no como argumento de venta.</div>
+
+    <div class="script">
+      <p>Pongamos números concretos sobre la mesa, con datos reales de Bildenlex.</p>
+      <p>150.000 visitas al año al sitio. Cero leads capturados automáticamente hoy — todo el pipeline entra por WhatsApp o por referidos directos.</p>
+      <p>Una página de lead magnet bien construida en servicios profesionales convierte entre un 3 y un 5% de las visitas. Aplicado al tráfico actual, eso son entre 200 y 400 contactos nuevos al mes disponibles para seguimiento.</p>
+      <p>El valor conservador de un expediente estándar de PI es de unos 600 dólares. Un solo cliente nuevo generado por el sistema al mes cubre el setup completo. Todo lo que venga a partir de ahí es ganancia acumulada.</p>
+      <p>La pregunta correcta no es si puedes permitirte el sistema. Es cuánto te está costando cada mes no tenerlo.</p>
+    </div>
+
+    <div class="objection">
+      <div class="obj-q">"¿Esa tasa de conversión es real para despachos legales?"</div>
+      <div class="obj-a">He usado el 3% precisamente porque es el número más conservador del rango para servicios profesionales. Con contenido de alta demanda como el de Bildenlex — deepfakes, marcas, software — el potencial es mayor. Pero prefiero que los números sean verificables y conservadores, no optimistas.</div>
+    </div>
+  </div>
+
+  <!-- S7 SISTEMA -->
+  <div class="slide-notes" data-slide="7">
+    <div class="slide-header">
+      <div class="badge">07</div>
+      <h2>El sistema — tres piezas</h2>
+    </div>
+
+    <div class="tactic">Preséntalo como un conjunto, no como tres servicios separables.</div>
+
+    <div class="script">
+      <p>El sistema tiene tres piezas que solo funcionan juntas — como engranajes. Si falta una, el resto no rinde.</p>
+      <p>La primera es la captura: una página dedicada más CTAs dentro del blog y del sitio, con recursos descargables que le dan al visitante una razón concreta para dejar su email antes de irse. Sin esto, el tráfico sigue evaporándose.</p>
+      <p>La segunda es la nutrición: una secuencia de emails automatizada que durante los próximos 30 días mantiene a Bildenlex presente en la mente del prospecto. Educa, genera confianza, derriba objeciones. Sin que toques nada.</p>
+      <p>La tercera es LinkedIn: un sistema de contenido regular que convierte la trayectoria de Guillermo en presencia visible para los prospectos correctos. Que cuando un emprendedor necesite un abogado de propiedad intelectual, Bildenlex sea el nombre que ya conoce.</p>
+      <p>Juntas, estas tres piezas convierten la autoridad que ya tienes en consultas predecibles — sin depender de referencias ni de que alguien se atreva a llamar directamente.</p>
+    </div>
+  </div>
+
+  <!-- S8 BONUS -->
+  <div class="slide-notes" data-slide="8">
+    <div class="slide-header">
+      <div class="badge">08</div>
+      <h2>Bonus — lead magnets</h2>
+    </div>
+
+    <div class="tactic">Señala el primero: "este ya existe". Deja que eso aterrice antes de pasar.</div>
+
+    <div class="script">
+      <p>Incluido en el setup, sin coste adicional, vienen tres recursos listos para usar — cada uno diseñado para hablar a un perfil distinto de cliente potencial de Bildenlex.</p>
+      <p>El primero — el Checklist Legal para Emprendedores — ya está construido y en vivo. Ahora mismo, cualquier visitante del sitio podría descargarlo. Es la puerta de entrada para fundadores de startups que están lanzando su negocio y todavía no tienen claro qué necesitan proteger.</p>
+      <p>El segundo — la Guía para Registrar tu Marca en Argentina — apunta al prospecto de alta intención: quien busca registrar una marca está a un paso de contratar. Lo construimos durante el setup.</p>
+      <p>El tercero — Protege tu Software y tu App — va directo al cliente B2B y tech de mayor ticket. También durante el setup.</p>
+      <p>Tres puertas de entrada. Tres razones distintas para que el prospecto deje su email antes de irse.</p>
+    </div>
+  </div>
+
+  <!-- S9 TU PARTE -->
+  <div class="slide-notes" data-slide="9">
+    <div class="slide-header">
+      <div class="badge">09</div>
+      <h2>Lo que necesitamos de ti</h2>
+    </div>
+
+    <div class="tactic">Responde la objeción de tiempo antes de que aparezca.</div>
+
+    <div class="script">
+      <p>Lo que necesitamos de Bildenlex para arrancar es mínimo y muy concreto.</p>
+      <p>Una sesión de 60 minutos para validar el contenido y el tono de los recursos — esa hora existe porque los lead magnets tienen que sonar como Bildenlex, no como una plantilla descargada de internet. Tu expertise es el ingrediente que hace que el sistema funcione para tu audiencia específica y no para la de cualquier otro despacho.</p>
+      <p>Acceso a las credenciales de WordPress para la integración técnica — lo resolvemos juntos en esa misma sesión de arranque, sin que necesites aprender nada nuevo ni contratar a nadie externo.</p>
+      <p>Y revisión y aprobación de los materiales antes de que salgan — tú validas, nosotros ejecutamos. Ningún email sale sin tu OK.</p>
+      <p>Lo que no necesitamos: que cambies tu rutina, que aprendas nuevas herramientas, ni que dediques horas semanales a esto. Tú sigues haciendo tu trabajo. El sistema trabaja en paralelo.</p>
+    </div>
+  </div>
+
+  <!-- S10 PROCESO -->
+  <div class="slide-notes" data-slide="10">
+    <div class="slide-header">
+      <div class="badge">10</div>
+      <h2>El proceso — plazos concretos</h2>
+    </div>
+
+    <div class="tactic">La garantía: dila despacio, mirando a cámara. Luego silencio.</div>
+
+    <div class="script">
+      <p>El proceso es simple y tiene plazos concretos.</p>
+      <p>La primera semana arrancamos con la sesión de validación — alineamos contenido, tono y accesos. Las semanas dos y tres son de construcción: página de captura, lead magnets, secuencia de emails, automatización. La semana cuatro hacemos pruebas de extremo a extremo y el sistema entra en marcha.</p>
+      <p>A partir del mes dos empieza la operación continua: dos publicaciones de LinkedIn por semana, una newsletter semanal, y el mantenimiento técnico del sistema. Todo incluido en los 500 dólares al mes. La gestión de respuestas a prospectos — en email y en LinkedIn — corre por cuenta de Bildenlex, porque esas conversaciones requieren tu voz legal.</p>
+      <p>Y la garantía es esta: si en 60 días no hay consultas calificadas entrando por el sistema, seguimos trabajando sin coste adicional hasta que las haya.</p>
+    </div>
+
+    <div class="objection">
+      <div class="obj-q">"¿60 días es suficiente para ver resultados?"</div>
+      <div class="obj-a">El sistema entra en marcha en 30 días. Los primeros 60 son suficientes para ver los primeros contactos cualificados entrando — no te estoy prometiendo 50 clientes, te estoy prometiendo que el mecanismo funciona y genera consultas reales. Si no es así, seguimos hasta que lo haga.</div>
+    </div>
+  </div>
+
+  <!-- S11 DANIEL -->
+  <div class="slide-notes" data-slide="11">
+    <div class="slide-header">
+      <div class="badge">11</div>
+      <h2>Por qué Daniel</h2>
+    </div>
+
+    <div class="tactic">No lo leas — cuéntalo. El punto del máximo 2 clientes, enfatízalo.</div>
+
+    <div class="script">
+      <p>No contratas una agencia donde tu cuenta la gestiona un equipo que cambia cada tres meses y que la semana que viene lleva otros veinte clientes. Contratas a la persona que va a hacer el trabajo — y esa persona soy yo.</p>
+      <p>Llevo desde 2019 trabajando con profesionales que tienen autoridad real en su sector pero carecen del sistema que la convierte en clientes predecibles. He construido embudos y estrategias de captación para creadores e infoproductores que han escalado a cifras de siete dígitos. Lo que cambia con Bildenlex es el sector — la lógica del sistema es la misma.</p>
+      <p>Trabajo con un máximo de dos clientes simultáneos. No es un límite arbitrario — es la condición que me permite darte atención total, ejecución personal y conocimiento real de tu negocio desde el primer día. Si estamos en esta llamada es porque hay espacio, y porque creo que Bildenlex tiene exactamente el perfil para el que este sistema funciona mejor.</p>
+    </div>
+
+    <div class="objection">
+      <div class="obj-q">"¿Tienes experiencia con despachos legales?"</div>
+      <div class="obj-a">Con Bildenlex específicamente es mi primer despacho, y prefiero ser transparente en eso. Lo que sí tengo es experiencia probada construyendo sistemas de captación para profesionales con autoridad en nichos técnicos — el desafío de convertir conocimiento experto en clientes predecibles es exactamente el mismo. Y el sistema que te propongo ya existe: la página de captación está en vivo.</div>
+    </div>
+  </div>
+
+  <!-- S12 INVERSIÓN -->
+  <div class="slide-notes" data-slide="12">
+    <div class="slide-header">
+      <div class="badge">12</div>
+      <h2>Inversión — resumen</h2>
+    </div>
+
+    <div class="tactic">Es un resumen, no una sorpresa. El precio ya lo vio. Deja que lo lea.</div>
+
+    <div class="script">
+      <p>Todo lo que hemos visto en esta presentación está dentro de esos números. Sin costes ocultos, sin letra pequeña.</p>
+      <p>El setup de 1.800 dólares incluye todo lo que se construye una sola vez: la página de captura, los tres lead magnets, la secuencia de emails automatizada, la integración en WordPress y el sistema de contenido para LinkedIn.</p>
+      <p>Los 500 dólares al mes desde el segundo mes cubren la operación continua: la newsletter semanal, los dos posts de LinkedIn por semana, y el mantenimiento técnico del sistema. Lo que no incluye es la gestión de respuestas a prospectos — eso requiere tu voz legal y lo gestiona Bildenlex directamente.</p>
+      <p>Y la garantía está incluida: 30 días para tener el sistema en marcha, 60 días para las primeras consultas calificadas. Si no llegamos, seguimos trabajando sin coste adicional hasta que lleguemos.</p>
+    </div>
+
+    <div class="objection">
+      <div class="obj-q">"¿Puedo pausar o cancelar el retainer?"</div>
+      <div class="obj-a">Sí, el retainer es flexible — puedes pausarlo o cancelarlo cuando quieras. Mi interés es que el sistema funcione y que quieras seguir. No en atarte a un contrato.</div>
+    </div>
+  </div>
+
+  <!-- S13 CIERRE -->
+  <div class="slide-notes" data-slide="13">
+    <div class="slide-header">
+      <div class="badge">13</div>
+      <h2>Cierre — ¿arrancamos?</h2>
+    </div>
+
+    <div class="tactic">Termina con pregunta de acción concreta. No con "¿qué te parece?"</div>
+
+    <div class="script">
+      <p>Eso es todo. En 30 días tienes el sistema en marcha. En 60 días, las primeras consultas calificadas entrando sin depender de referencias ni de WhatsApp.</p>
+      <p>Si lo que has visto tiene sentido para Bildenlex, el siguiente paso es muy simple: una sesión de arranque de 60 minutos esta semana o la próxima.</p>
+      <p>¿Tienes disponibilidad?</p>
+    </div>
+
+    <div class="objection">
+      <div class="obj-q">"Necesito pensarlo / consultarlo."</div>
+      <div class="obj-a">Por supuesto, es una decisión que merece pensarse. ¿Cuándo crees que podrías tener una respuesta? Te pregunto porque trabajo con un máximo de dos clientes y quiero saber si puedo reservar el espacio para Bildenlex.</div>
+    </div>
+
+    <div class="objection">
+      <div class="obj-q">"El precio sigue pareciéndome alto."</div>
+      <div class="obj-a">Entiendo. Déjame preguntarte algo: ¿cuántos clientes nuevos al mes necesitaría generarte el sistema para que la inversión tuviera sentido? Porque si la respuesta es uno, la aritmética ya funciona con los números más conservadores que te he mostrado.</div>
+    </div>
+
+    <div class="objection">
+      <div class="obj-q">"No tengo tiempo ahora mismo."</div>
+      <div class="obj-a">Lo que te pido de tiempo es una sesión de 60 minutos una sola vez. El resto lo ejecuto yo. Y si ahora no es el momento, dime cuándo lo sería — esto no caduca, pero el espacio en mi agenda sí.</div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="bottom-nav">
+  <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Anterior</button>
+  <div class="slide-counter">
+    <span class="cur" id="curNum">1</span> / 13
+  </div>
+  <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Siguiente →</button>
+</div>
+
+<script>
+  let cur = 1;
+  const total = 13;
+  const labels = ['Portada','Precio','Espejo','Problema','Antes/Después','Números','Sistema','Bonus','Tu parte','Proceso','Daniel','Inversión','Cierre'];
+
+  const pills = document.getElementById('navPills');
+  for (let i = 1; i <= total; i++) {
+    const p = document.createElement('button');
+    p.className = 'pill' + (i === 1 ? ' active' : '');
+    p.textContent = `${String(i).padStart(2,'0')} · ${labels[i-1]}`;
+    p.onclick = () => goTo(i);
+    pills.appendChild(p);
+  }
+
+  function goTo(n) {
+    document.querySelector(`.slide-notes[data-slide="${cur}"]`).classList.remove('visible');
+    document.querySelectorAll('.pill')[cur-1].classList.remove('active');
+    cur = Math.max(1, Math.min(total, n));
+    document.querySelector(`.slide-notes[data-slide="${cur}"]`).classList.add('visible');
+    document.querySelectorAll('.pill')[cur-1].classList.add('active');
+    window.scrollTo(0,0);
+    document.getElementById('curNum').textContent = cur;
+    document.getElementById('prevBtn').disabled = cur === 1;
+    document.getElementById('nextBtn').disabled = cur === total;
+    document.getElementById('progress').style.width = `${(cur/total)*100}%`;
+    document.querySelectorAll('.pill')[cur-1].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  }
+
+  function navigate(d) { goTo(cur + d); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigate(-1);
+  });
+
+  document.getElementById('progress').style.width = `${(1/total)*100}%`;
+</script>
+</body>
+</html>
