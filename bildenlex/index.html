@@ -523,19 +523,21 @@
   }
   .s4-stat {
     font-family: var(--font-display);
-    font-size: 78px;
+    font-size: clamp(28px, 4.2vw, 48px);
     font-weight: 600;
     color: var(--fg-1);
-    line-height: 1.1;
-    letter-spacing: -0.025em;
+    line-height: 1.18;
+    letter-spacing: -0.02em;
     text-align: center;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    text-wrap: balance;
   }
   .s4-stat .pct {
     color: var(--gold);
     font-style: italic;
     font-weight: 700;
-    font-size: 110px;
-    margin-right: 8px;
   }
 
   /* ─── Slide-5 Antes/Después ───────────────────── */
@@ -1508,7 +1510,7 @@
   </div>
 
   <div class="s4-stat">
-    <span class="pct">97%</span>de tus visitantes se va sin dejar rastro.
+    Un <span class="pct">porcentaje altísimo</span> de tus visitantes se va sin dejar rastro si no les das un motivo para quedarse.
   </div>
 
   <div class="waves" aria-hidden="true">
