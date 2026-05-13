@@ -119,21 +119,19 @@
     margin-bottom: 80px;
   }
   .card {
-    display: block;
+    display: flex;
+    flex-direction: column;
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 8px;
     padding: 44px 44px 36px;
-    text-decoration: none;
     color: inherit;
     position: relative;
     overflow: hidden;
-    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    transition: border-color 0.2s ease;
   }
   .card:hover {
-    border-color: var(--gold);
-    transform: translateY(-2px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 50px rgba(201,160,82,0.10);
+    border-color: var(--line-strong);
   }
   .card .clabel {
     font-family: var(--font-mono);
@@ -163,29 +161,65 @@
     font-weight: 300;
     color: var(--fg-3);
     line-height: 1.5;
-    margin: 0 0 36px;
+    margin: 0 0 28px;
     max-width: 440px;
   }
-  .card .meta {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--fg-4);
-    margin: 0;
+  .card .actions {
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+  }
+  .card .actions a {
     display: flex;
     align-items: center;
-    gap: 16px;
-  }
-  .card .meta .arrow {
-    margin-left: auto;
-    color: var(--gold);
+    justify-content: space-between;
+    padding: 18px 0;
+    text-decoration: none;
+    color: var(--fg-1);
     font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    border-bottom: 1px solid var(--line);
+    transition: color 0.18s ease, padding 0.18s ease;
+  }
+  .card .actions a:last-child { border-bottom: none; }
+  .card .actions a .label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .card .actions a .kicker {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--fg-4);
+  }
+  .card .actions a .arrow {
+    color: var(--gold);
     font-size: 20px;
     transition: transform 0.2s ease;
   }
-  .card:hover .meta .arrow { transform: translateX(6px); }
-  .card .meta span { color: var(--fg-3); }
+  .card .actions a:hover { color: var(--gold); padding-left: 4px; }
+  .card .actions a:hover .arrow { transform: translateX(6px); }
+  .card .actions a.muted {
+    color: var(--fg-4);
+    pointer-events: none;
+    cursor: default;
+  }
+  .card .actions a.muted .arrow { color: var(--fg-4); }
+  .card .actions a.muted .badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 3px 10px;
+  }
 
   /* Footer */
   footer {
@@ -250,29 +284,37 @@
   <p class="lede">Cada propuesta está diseñada para una llamada concreta. Selecciona la tuya — se navega con las flechas izquierda/derecha del teclado.</p>
 
   <div class="cards">
-    <a href="viron/" class="card">
+    <div class="card">
       <div class="clabel">Propuesta · Mayo 2026</div>
       <h2>Viron <em>Global Solutions.</em></h2>
-      <p class="sub">Sistema de captación para una consultora de IA con tráfico y autoridad — pero sin recontacto.</p>
-      <div class="meta">
-        <span>13 slides</span>
-        <span>·</span>
-        <span>Llamada de cierre</span>
-        <span class="arrow">→</span>
+      <p class="sub">Sistema de captación para una consultora de IA con tráfico y autoridad, pero sin recontacto.</p>
+      <div class="actions">
+        <a href="viron/">
+          <span class="label"><span class="kicker">01</span> Presentación</span>
+          <span class="arrow">→</span>
+        </a>
+        <a class="muted">
+          <span class="label"><span class="kicker">02</span> Notas del presentador</span>
+          <span class="badge">Próximamente</span>
+        </a>
       </div>
-    </a>
+    </div>
 
-    <a href="bildenlex/" class="card">
+    <div class="card">
       <div class="clabel">Propuesta · Mayo 2026</div>
       <h2>Bildenlex <em>Abogados.</em></h2>
       <p class="sub">Sistema de captación para despacho boutique con 150K visitas/año y cero leads automáticos.</p>
-      <div class="meta">
-        <span>13 slides</span>
-        <span>·</span>
-        <span>Llamada de cierre</span>
-        <span class="arrow">→</span>
+      <div class="actions">
+        <a href="bildenlex/">
+          <span class="label"><span class="kicker">01</span> Presentación</span>
+          <span class="arrow">→</span>
+        </a>
+        <a href="bildenlex/notas.html">
+          <span class="label"><span class="kicker">02</span> Notas del presentador</span>
+          <span class="arrow">→</span>
+        </a>
       </div>
-    </a>
+    </div>
   </div>
 </div>
 
